@@ -1,0 +1,124 @@
+/* --- Base Styles (Keep these) --- */
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  background-image: linear-gradient(
+    90deg,
+    #e0e0e0 0px,
+    #f5f5f5 40px,
+    #e0e0e0 80px
+  );
+  background-size: 200%;
+  animation: shimmer 1.5s infinite linear;
+}
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* --- Layout Containers --- */
+
+/* Corresponds to styles.listContainer */
+.list-container-skeleton {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Skeleton for the "Featured Products" title */
+.skeleton-heading {
+  height: 32px;
+  width: 250px;
+  margin-bottom: 24px;
+}
+
+/* Corresponds to styles.productList (Grid layout) */
+.product-list-skeleton {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  /* Now showing 3 cards per row */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* --- Vertical Card Styles --- */
+
+/* Corresponds to styles.listItem */
+.list-item-skeleton {
+  display: flex;
+  flex-direction: column; /* Vertical layout is key here */
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Skeleton for the product image - takes up the full width */
+.image-skeleton-vertical {
+  width: 100%;
+  /* Make the image area taller for a visual impact (like a 1:1 or 4:3 aspect ratio) */
+  height: 200px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+/* Container for the product details (below the image) */
+.details-skeleton-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Tighter spacing for details */
+}
+
+/* Title size (a bit larger) */
+.skeleton-title-vertical {
+  height: 18px;
+  width: 80%;
+  margin-bottom: 4px;
+}
+
+/* Pricing and Stats Row */
+.stats-skeleton-row {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+/* Individual pricing/stock stat block */
+.skeleton-stat {
+    height: 14px;
+    width: 25%;
+}
+
+.skeleton-stat-small {
+    height: 14px;
+    width: 15%;
+}
+
+/* Smaller text lines for brand/description */
+.skeleton-text-small {
+  height: 14px;
+  width: 40%;
+}
+
+.skeleton-text-long-thin {
+    height: 10px;
+    width: 95%;
+}
+
+
+/* --- Media Queries (Adjusted for 3-column grid) --- */
+@media (max-width: 1024px) {
+  .product-list-skeleton {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .product-list-skeleton {
+    grid-template-columns: 1fr;
+  }
+}

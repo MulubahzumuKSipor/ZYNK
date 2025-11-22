@@ -1,0 +1,188 @@
+/* === Container === */
+.container {
+  /* This container is important for positioning the mini-cart */
+  position: relative;
+  z-index: 100; /* Ensures it sits above local elements */
+}
+
+/* === Main Cart Button & Icon === */
+.cartButton {
+  position: relative; /* Allows the count badge to be positioned on top */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px; /* Give the icon some breathing room */
+  border-radius: 50%;
+  color: #333;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cartButton:hover {
+  background-color: #f4f4f4;
+}
+
+.cartButton:focus-visible {
+  outline: 2px solid #0070f3;
+  outline-offset: 2px;
+}
+
+/* The SVG icon itself */
+.cartIcon {
+  display: block; /* Removes any extra space below the SVG */
+}
+
+/* === Cart Count Badge === */
+.cartCount {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  /* Sizing & Shape */
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px; /* Makes it a pill/circle */
+
+  /* Colors */
+  background-color: #e60000;
+  color: white;
+
+  /* Text */
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px; /* Vertically centers the text */
+  text-align: center;
+
+  /* Animation */
+  transform: scale(1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Optional: 'pop' animation when count changes */
+.cartButton:not(:empty) .cartCount {
+  transform: scale(1.1);
+}
+
+/* === Mini-Cart Panel === */
+.miniCart {
+  /* Positioning */
+  position: fixed; /* Fixed to the viewport */
+  top: 0;
+  right: 0;
+  z-index: 1000; /* Sits on top of everything */
+
+  /* Sizing */
+  height: 100vh; /* Full viewport height */
+  width: 350px;
+  max-width: 90vw; /* Good for small mobile */
+
+  /* Appearance */
+  background-color: #ffffff;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+
+  /* Slide-out Animation */
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  visibility: hidden;
+}
+
+/* The 'open' state */
+.miniCart.open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* === Mini-Cart Sections === */
+.miniCartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.miniCartHeader strong {
+  font-size: 1.25rem;
+}
+
+.miniCartBody {
+  flex-grow: 1; /* Takes up all available space */
+  padding: 1.25rem;
+  overflow-y: auto; /* Adds scroll if content is too long */
+}
+
+.miniCartFooter {
+  padding: 1.25rem;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* === Mini-Cart Content === */
+.emptyText,
+.itemsText {
+  text-align: center;
+  color: #555;
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+/* === Buttons === */
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #777;
+  padding: 4px;
+  border-radius: 50%;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #000;
+  background-color: #f4f4f4;
+}
+
+.viewCartButton,
+.checkoutButton {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Primary Button */
+.checkoutButton {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.checkoutButton:hover {
+  background-color: #333;
+}
+
+/* Secondary Button */
+.viewCartButton {
+  background-color: #fff;
+  color: #000;
+  border-color: #ccc;
+}
+
+.viewCartButton:hover {
+  border-color: #000;
+  background-color: #f9f9f9;
+}

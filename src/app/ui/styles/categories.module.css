@@ -1,0 +1,55 @@
+/* CategoryList.module.css */
+
+.grid {
+  display: grid;
+  /* Responsive columns: fit as many as possible, minimum 180px wide */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  padding: 50px 120px;
+  gap: 1rem;
+  /* width: 100%; */
+}
+
+.card {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px; /* Matches your original height */
+  padding: 1rem;
+  
+  /* Typography */
+  text-decoration: none;
+  color: #374151;
+  font-weight: 600;
+  text-align: center;
+  
+  /* Visuals */
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px; /* Softer, modern corners */
+  
+  /* Animation */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover Effects */
+.card:hover {
+  transform: translateY(-4px); /* The "Elevated" effect */
+  border-color: #3b82f6;
+  color: #2563eb;
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
+}
+
+.card:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Loading State Styling */
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+}

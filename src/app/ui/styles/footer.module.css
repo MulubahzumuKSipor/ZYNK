@@ -1,0 +1,68 @@
+/* --- footer.module.css --- */
+
+/* --- The Glass Footer Container --- */
+.footerGlass {
+  
+  padding: 30px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* * --- THEME UPDATE --- 
+   * Tint the glass with a semi-transparent dark blue.
+   * This is much more modern and lets the backdrop-filter work.
+   */
+  background: rgba(13, 71, 161, 0.25); /* 25% opaque #0D47A1 */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* A softer, more modern shadow */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+  /* A subtle border to define the glass edge */
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  
+  color: #ffffff;
+  position: relative;
+}
+
+/* --- Copyright Text --- */
+.copyright {
+  font-size: 1em;
+  margin-bottom: 15px;
+  color: #f5f5f5; /* A slightly softer white */
+}
+
+.copyright a {
+  /* --- THEME UPDATE: Use the vibrant yellow for links --- */
+  color: #ffd600; 
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.copyright a:hover {
+  color: #ffffff; /* Hover to bright white */
+  text-decoration: underline;
+}
+
+/* --- Social Media Links Container --- */
+.footerLinks {
+  display: flex;
+  gap: 25px;
+}
+
+.footerLinks a {
+  transition: transform 0.2s ease-in-out, filter 0.3s;
+  line-height: 0;
+}
+
+/* --- THEME UPDATE: Make the hover glow yellow --- */
+.footerLinks a:hover {
+  transform: translateY(-5px) scale(1.1);
+  /* The glow now matches the theme's yellow accent */
+  filter: drop-shadow(0 0 10px rgba(255, 214, 0, 0.8));
+}

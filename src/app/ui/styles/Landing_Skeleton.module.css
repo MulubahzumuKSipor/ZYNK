@@ -1,0 +1,77 @@
+/* styles/LandingPage.module.css */
+
+/* (Keep all your existing styles here, and add the following new styles below) */
+
+/* --- Skeleton Styles --- */
+
+.skeletonContainer {
+  /* Ensure the container has a minimum height so the skeleton is visible */
+  min-height: 80vh; 
+}
+
+/* The Shimmer animation effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeletonShimmer {
+  background: #f6f7f8;
+  background-image: linear-gradient(to right, #f6f7f8 0%, #e9ebec 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: 4px; /* Optional: adds a nice rounded look */
+}
+
+/* Placeholders matching the original components' dimensions/layout */
+
+.productSearchBarPlaceholder {
+  height: 50px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto; /* Centers it like a search bar often is */
+}
+
+.heroImagePlaceholder {
+  width: 100%;
+  height: 300px;
+  /* Parent .heroLeft already has styles, this inner div just needs height/width */
+}
+
+.heroTitlePlaceholder {
+  height: 40px;
+  width: 80%;
+  margin-bottom: 15px;
+}
+
+.heroDescriptionPlaceholder {
+  height: 20px;
+  width: 90%;
+  margin-bottom: 10px;
+}
+
+.heroButtonPlaceholder {
+  height: 45px;
+  width: 150px;
+  margin-top: 20px;
+}
+
+.socialIconPlaceholder {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; /* Makes them look like the original circular icons */
+  margin: 0 10px;
+}
+
+/* Ensure the layout styles are consistent for both the main component and the skeleton */
+.bottom_links {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Adjust gap if needed for icon spacing */
+}
+

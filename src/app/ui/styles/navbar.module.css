@@ -1,0 +1,160 @@
+
+/* === Base Navbar & Layout === */
+.navbar {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  padding: 0 2rem;
+  margin-left: 20px;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 1200px; /* Optional: set a max-width for your content */
+  margin: 0 auto;
+}
+
+.nav-item {
+  /* This is crucial for positioning the mega menu */
+  position: relative;
+}
+
+/* === Links & Buttons === */
+
+/* Style both <Link> (<a>) and <button> to look consistent */
+.nav-item > a,
+.nav-item > button {
+  display: block;
+  font-size: 1rem;
+  padding: 8px 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Reset default button styles */
+.nav-item > button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit; /* Ensure font matches */
+}
+
+/* Add hover/focus states for all items */
+
+
+/* Style the button when its menu is open */
+.nav-item > button[aria-expanded="true"] {
+  color: #0070f3;
+  background-color: #f9f9f9;
+}
+
+/* === Cart Icon === */
+
+/* This pushes the cart item all the way to the right */
+.nav-item.cart {
+  margin-left: auto;
+}
+
+.nav-item.cart a {
+  padding: 1rem; /* Give the icon some space */
+}
+
+/* === The Mega Menu === */
+.megaMenu {
+    padding: 20px;
+    left: 75%;
+  /* Positioning */
+  position: absolute;
+  /* top: 100%;
+  left: 0; */
+  z-index: 1000; /* Ensure it's on top of other content */
+
+  /* Layout */
+  /* display: flex; */
+  gap: 2rem; /* Space between columns */
+
+  /* Appearance */
+  border-top: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  /* padding: 1.5rem 2rem; */
+  width: max-content; /* Make the menu as wide as its content */
+}
+
+.main_wrapper {
+  /* Updated to a modern Blue-to-Yellow gradient */
+  background: linear-gradient(
+    135deg,
+    #0d47a1, /* Deep, rich blue */
+    #42a5f5, /* Brighter mid-point blue */
+    #ffd600  /* Vibrant, modern yellow */
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Keyframe animation remains the same, it's perfect */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* === Mega Menu Columns & Content === */
+.mega-menu-column {
+  /* The 'flex' on .mega-menu handles the layout */
+}
+
+/* Style for single links in a column */
+.mega-menu-column > a {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.mega-menu-column > a:hover {
+  background-color: #f4f4f4;
+}
+
+/* Style for columns with headers and lists */
+.mega-menu-column h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mega-menu-column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mega-menu-column li a {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mega-menu-column li a:hover {
+  background-color: #f4f4f4;
+  color: #0070f3;
+}

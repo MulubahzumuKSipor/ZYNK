@@ -1,0 +1,159 @@
+:root{
+  /* --- WHITE & BLUE THEME --- */
+  --primary-color: #003366; /* Deep Navy Blue (Trust, Security) */
+  --secondary-color: #0077B6; /* Vibrant Blue (Hover, Links) */
+  --accent-color: #FFD700; /* Gold/Yellow (Logo, Accents) */
+  --accent-color-dark: #ccaa00; /* Darker Gold for hover */
+  --button-color: #FF5733; /* High-Contrast CTA Orange/Red */
+
+  --primary-font: var(--font-tilt-prism);
+  --primary-font-settings: "XROT" 0, "YROT" 0;
+  --secondary-font: var(--font-geist-sans)
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  /* padding-top: 92px; */
+  box-sizing: border-box;
+}
+
+/* Logo needs to be align in the center */
+.logo{
+  align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.link{
+  text-decoration: none;
+}
+
+nav{
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+.down_button, nav a{
+  display: flex;
+  text-decoration: none;
+  /* FIX: Change link color from black to white/light */
+  color: black;
+  font-size: large;
+  font-weight: 700; /* Bolder font for better visibility */
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+  list-style: none;
+  background: none;
+  border: none;
+}
+
+.down_button:hover, nav a:hover{
+  text-decoration: underline; /* Removed double underline for cleaner look */
+  /* FIX: Use secondary color for hover underline */
+  color: var(--accent-color);
+  border-radius: 5px; /* Softer border radius */
+  /* FIX: Use a cleaner border/outline instead of solid blanchedalmond */
+  border: 1px solid var(--accent-color-dark);
+}
+
+/* Logo Title should use the accent color */
+.title{
+  font-family: var(--primary-font);
+  font-variation-settings: var(--primary-font-settings);
+  font-size: 2rem;
+  color: var(--accent-color); /* Use the gold accent color */
+  margin-bottom: 1rem;
+  padding: 20px 0;
+}
+
+
+/* Footer Section */
+
+
+.main_wrapper {
+  /* Updated to a modern Blue-to-Yellow gradient */
+  background: linear-gradient(
+    135deg,
+    #0d47a1, /* Deep, rich blue */
+    #42a5f5, /* Brighter mid-point blue */
+    #ffd600  /* Vibrant, modern yellow */
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+}
+
+.main_wrapper_footer {
+  /* Updated to a modern Blue-to-Yellow gradient */
+  background: linear-gradient(
+    135deg,
+    #0d47a1, /* Deep, rich blue */
+    #42a5f5, /* Brighter mid-point blue */
+    #ffd600  /* Vibrant, modern yellow */
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  /* position: fixed;
+  z-index: 1000;
+  width: 100%; */
+}
+/* Keyframe animation remains the same, it's perfect */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- Cart Button --- */
+.cartButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(13, 71, 161, 0.25);
+  color: #ffd600; /* same yellow accent as links */
+  cursor: pointer;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+/* Hover effect — subtle glow and lift */
+.cartButton:hover {
+  transform: translateY(-4px) scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(255, 214, 0, 0.8));
+}
+
+/* SVG Cart Icon */
+.cartIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* --- Item Count Badge --- */
+.cartCount {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #ffd600;
+  color: #0d47a1;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 50%;
+  padding: 2px 6px;
+  line-height: 1;
+  min-width: 18px;
+  text-align: center;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
