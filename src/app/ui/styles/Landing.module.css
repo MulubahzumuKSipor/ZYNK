@@ -105,19 +105,19 @@
 
 /* --- Text Background (Glass container) --- */
 .textBackground {
-  width: 10px;
-    position: relative;
-    padding: 30px;
-    border-radius: 20px;
-    overflow: hidden;
-    /* Current background is good for glass: semi-transparent dark overlay */
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    /* Set text color for all children inside the glass */
-    color: white;
+  /* width: 10px; */
+  position: relative;
+  padding: 30px;
+  border-radius: 20px;
+  overflow: hidden;
+  /* Current background is good for glass: semi-transparent dark overlay */
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  /* Set text color for all children inside the glass */
+  color: white;
 }
 
 /* Ensure Title and Description use the white color set above */

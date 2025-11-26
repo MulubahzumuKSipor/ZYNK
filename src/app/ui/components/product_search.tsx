@@ -79,7 +79,9 @@ export default function ProductSearch({
           setError(null);
         }
       } catch (e) {
-        if (e instanceof Error) setError(e.message);
+        if ((e as Error)?.name === "AbortError") {
+          /* aborted during cleanup */
+        } else if (e instanceof Error) setError(e.message);
         else setError("Unknown error");
       } finally {
         if (!cancelled) setLoading(false);
@@ -150,10 +152,12 @@ export default function ProductSearch({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={(e) => {
-            if (e.key === "Escape") setQuery("");
+            if (e.key === "Escape") {
+              setQuery("");
+              setShowSuggestions(false);
+            }
           }}
           className="input"
-
         />
 
         {query ? (
@@ -164,6 +168,7 @@ export default function ProductSearch({
               setDebouncedQuery("");
               setShowSuggestions(false);
             }}
+            onMouseDown={(e) => e.preventDefault()} // prevent input blur before click
             style={{
               padding: "8px 10px",
               borderRadius: 8,
@@ -181,6 +186,8 @@ export default function ProductSearch({
             height="34"
             viewBox="0 0 24 24"
             style={{ cursor: "pointer" }}
+            role="img"
+            aria-hidden
           >
             <g fill="none">
               <path d="M0 0h24v24H0z" />
@@ -197,17 +204,32 @@ export default function ProductSearch({
       {showSuggestions && (
         <div
           role="listbox"
+          aria-label="Product suggestions"
           className="listbox"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            background: "#fff",
+            border: "1px solid #eee",
+            borderRadius: 8,
+            marginTop: 8,
+            boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+            maxHeight: 420,
+            overflow: "auto",
+          }}
         >
           {error && <div style={{ color: "crimson", padding: 12 }}>Error: {error}</div>}
 
-          {filtered.length > 0 ? (
+          {loading && !productsToSearch.length ? (
+            <div style={{ padding: 12 }}>Loading products…</div>
+          ) : filtered.length > 0 ? (
             <ul style={{ listStyle: "none", paddingLeft: 0, margin: 0 }}>
               {filtered.map((p) => {
-                const key = p.product_id ?? p.id ?? p.sku;
+                const key = p.product_id ?? p.id ?? p.sku ?? Math.random();
                 const title = p.title ?? p.name ?? "Untitled product";
                 const imageUrl = p.images?.[0]?.image_url;
-
                 return (
                   <li key={String(key)} role="option" style={{ marginBottom: 0 }}>
                     <Link
@@ -231,6 +253,7 @@ export default function ProductSearch({
                           background: "#f6f6f6",
                           borderRadius: 6,
                           flexShrink: 0,
+                          overflow: "hidden",
                         }}
                       >
                         {imageUrl ? (
@@ -256,7 +279,6 @@ export default function ProductSearch({
                           </div>
                         )}
                       </div>
-
                       <div style={{ flex: 1 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
                           <div style={{ fontWeight: 600 }}>{title}</div>
@@ -275,8 +297,7 @@ export default function ProductSearch({
                           </div>
                         )}
                       </div>
-
-                      <div style={{ fontSize: 13, color: "#0066cc" }}>View →</div>
+                      <div style={{ fontSize: 13, color: "#0066cc", whiteSpace: "nowrap" }}>View →</div>
                     </Link>
                   </li>
                 );
@@ -286,11 +307,10 @@ export default function ProductSearch({
             <div style={{ padding: 12, color: "#666" }}>No results</div>
           )}
 
-          {productsToSearch.length > limit && filtered.length >= limit && (
-            <div style={{ marginTop: 10, padding: 10 }}>
-              <Link href={`/search?query=${encodeURIComponent(query)}`}>
-                See more results →
-              </Link>
+          {/* "See more" when there are more items on server */}
+          {productsToSearch.length > (filtered.length ?? 0) && (
+            <div style={{ marginTop: 10, padding: 10, textAlign: "right" }}>
+              <Link href={`/search?query=${encodeURIComponent(query)}`}>See more results →</Link>
             </div>
           )}
         </div>

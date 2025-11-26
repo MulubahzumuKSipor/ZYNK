@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react"; // Added Suspense import
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/app/types/product";
@@ -13,7 +13,8 @@ const safeFormatPrice = (v: unknown) => {
   return Number.isInteger(n) ? `${n}` : n.toFixed(2);
 };
 
-export default function SearchPage() {
+// 1. Rename your original component to something internal (e.g., SearchContent)
+function SearchContent() {
   const params = useSearchParams();
   const query = params.get("query") ?? "";
 
@@ -67,7 +68,7 @@ export default function SearchPage() {
 
       <ul style={{ listStyle: "none", paddingLeft: 0 }}>
         {products.map((p, idx) => {
-          const key = p.product_id ?? p.external_id ?? p.sku ?? idx; // stable key
+          const key = p.product_id ?? p.external_id ?? p.sku ?? idx;
           const title = p.title ?? p.name ?? "Untitled product";
           const imageUrl = p.images?.[0]?.image_url;
 
@@ -133,5 +134,15 @@ export default function SearchPage() {
         })}
       </ul>
     </div>
+  );
+}
+
+// 2. Export the Page component wrapped in Suspense
+export default function SearchPage() {
+  return (
+    // You can customize the fallback UI here
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }
