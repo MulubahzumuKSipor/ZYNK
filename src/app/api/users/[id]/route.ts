@@ -10,32 +10,24 @@ export async function GET(
   try {
     const authResult = await authMiddleware(req);
 
-    if (authResult instanceof NextResponse) {
-      return authResult;
-    }
+    if (authResult instanceof NextResponse) return authResult;
 
     const authUser: User = authResult;
-    const { id } = await context.params; // no await
+    const { id } = await context.params;
 
-    if (!id) {
-      return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
-    }
-
-    if (authUser.id !== id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    if (!id) return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
+    if (authUser.id !== id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { rows } = await pool.query(
-      `
-      SELECT * FROM orders
-      WHERE user_id = $1
-    `,
+      `SELECT id, username, email, role, status FROM users WHERE user_id = $1`,
       [id]
     );
 
-    return NextResponse.json({ orders: rows || [] }, { status: 200 });
+    if (!rows || rows.length === 0) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    return NextResponse.json({ user: rows[0] }, { status: 200 });
   } catch (err) {
-    console.error("[GET /api/orders/[userId]] error:", err);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+    console.error("[GET /api/users/[id]] error:", err);
+    return NextResponse.json({ error: "Failed to fetch user" }, { status: 500 });
   }
 }

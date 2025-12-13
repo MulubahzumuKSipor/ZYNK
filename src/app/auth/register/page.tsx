@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, CheckCircle, XCircle } from 'lucide-react'
 import styles from '@/app/ui/styles/register.module.css'
 import Link from 'next/link'
+import { supabase } from '@/lib/client'
 
 interface FormState {
   username: string
@@ -39,6 +40,16 @@ export default function RegisterPage() {
       setForm({ ...form, [target.name]: target.value })
     }
   }
+
+    useEffect(() => {
+      const checkLoggedIn = async () => {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          router.replace('/shop') // redirect to shop if user is already logged in
+        }
+      }
+      checkLoggedIn()
+    }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

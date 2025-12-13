@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Send } from 'lucide-react'
 import styles from '@/app/ui/styles/login.module.css'
@@ -17,6 +17,17 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [unverified, setUnverified] = useState(false)
+
+  // --- Redirect if already logged in ---
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        router.replace('/shop') // redirect to shop if user is already logged in
+      }
+    }
+    checkLoggedIn()
+  }, [router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -47,7 +58,7 @@ export default function LoginPage() {
       }
 
       // Login successful — redirect
-      router.push('/')
+      router.push('/shop')
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -57,7 +68,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.loginCard}> {/* New Card Wrapper */}
+      <div className={styles.loginCard}>
         <h1 className={styles.title}>Welcome Back 👋</h1>
 
         {/* --- Message Area --- */}
@@ -107,11 +118,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Optional Footer Link */}
         <div className={styles.footerLink}>
-            <p>{"Don't have an account? "}<Link href="/auth/register">Sign up</Link></p>
+          <p>{"Don't have an account? "}<Link href="/auth/register">Sign up</Link></p>
         </div>
-
       </div>
     </div>
   )

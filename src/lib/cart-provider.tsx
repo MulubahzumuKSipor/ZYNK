@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { supabase } from '@/lib/client'
 
 export type CartItem = {
@@ -22,7 +22,7 @@ interface CartContextType {
   addToCart: (variantId: number, qty?: number) => Promise<void>
   updateCartItem: (cartItemId: number, quantity: number) => Promise<void>
   removeFromCart: (cartItemId: number) => Promise<void>
-  refreshCart: () => Promise<void>
+  refreshCart: () => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -34,100 +34,94 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
-  // Helper: get headers with user info if logged in
-  const getHeaders = useCallback(async (): Promise<HeadersInit> => {
-    const headers: HeadersInit = { 'Content-Type': 'application/json' }
-    const { data: { session } } = await supabase.auth.getSession()
-    if (session?.user?.id) headers['x-user-id'] = session.user.id
-    return headers
-  }, [])
-
-  // Fetch cart (also merges guest cart if logged in)
-  const fetchCart = useCallback(async () => {
+  // Fetch Cart
+  const fetchCart = async () => {
     setIsLoading(true)
     try {
-      const headers = await getHeaders()
-      const res = await fetch('/api/add-to-cart', { headers, credentials: 'include' })
-      if (!res.ok) throw new Error('Failed to fetch cart')
-      const data: CartItem[] = await res.json()
-      setItems(data)
-    } catch (err) {
-      console.error('Failed to fetch cart:', err)
-      setItems([])
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+      // Add user header if needed:
+      // if (session?.user?.id) headers['x-user-id'] = session.user.id
+
+      const res = await fetch('/api/add-to-cart', { headers })
+      if (res.ok) {
+        const data = await res.json()
+        setItems(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch cart:', error)
     } finally {
       setIsLoading(false)
     }
-  }, [getHeaders])
+  }
 
-  // Initial fetch
   useEffect(() => {
     fetchCart()
-  }, [fetchCart])
+  }, [])
 
-  // Listen for login and merge guest cart automatically
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event) => {
-      if (event === 'SIGNED_IN') {
-        await fetchCart()
-      }
-    })
-    return () => authListener?.subscription.unsubscribe()
-  }, [fetchCart])
-
-  // Add item
-  const addToCart = useCallback(async (product_variant_id: number, quantity = 1) => {
+  // Add / Increment Item
+  const addToCart = async (product_variant_id: number, quantity = 1) => {
     try {
-      const headers = await getHeaders()
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+      // if (session?.user?.id) headers['x-user-id'] = session.user.id
+
       const res = await fetch('/api/add-to-cart', {
         method: 'POST',
         headers,
-        credentials: 'include',
         body: JSON.stringify({ product_variant_id, quantity }),
       })
+
       if (!res.ok) throw new Error('Failed to add to cart')
+
       await fetchCart()
       setIsOpen(true)
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       alert('Could not add item to cart.')
     }
-  }, [fetchCart, getHeaders])
+  }
 
-  // Update item quantity
-  const updateCartItem = useCallback(async (cart_item_id: number, quantity: number) => {
+  // Update Item Quantity
+  const updateCartItem = async (cart_item_id: number, quantity: number) => {
     try {
       if (quantity < 1) return removeFromCart(cart_item_id)
-      const headers = await getHeaders()
+
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+
       const res = await fetch('/api/add-to-cart', {
         method: 'PATCH',
         headers,
-        credentials: 'include',
         body: JSON.stringify({ cart_item_id, quantity }),
       })
+
       if (!res.ok) throw new Error('Failed to update cart item')
       await fetchCart()
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       alert('Could not update item quantity.')
     }
-  }, [fetchCart, getHeaders])
+  }
 
-  // Remove item
-  const removeFromCart = useCallback(async (cart_item_id: number) => {
+  // Remove Item
+  const removeFromCart = async (cart_item_id: number) => {
     try {
-      const headers = await getHeaders()
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+
       const res = await fetch(`/api/add-to-cart?cart_item_id=${cart_item_id}`, {
         method: 'DELETE',
         headers,
-        credentials: 'include',
       })
+
       if (!res.ok) throw new Error('Failed to remove cart item')
       await fetchCart()
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       alert('Could not remove item from cart.')
     }
-  }, [fetchCart, getHeaders])
+  }
 
   const toggleCart = () => setIsOpen(prev => !prev)
   const openCart = () => setIsOpen(true)

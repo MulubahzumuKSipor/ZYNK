@@ -1,13 +1,17 @@
-// next.config.ts
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   images: {
-    // One-liner (works in every Next.js version)
-    domains: ['images.openfoodfacts.org', 'cdn.dummyjson.com', 'drive.google.com', 'raw.githubusercontent.com'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.openfoodfacts.org' },
+      { protocol: 'https', hostname: 'cdn.dummyjson.com' },
+      { protocol: 'https', hostname: 'drive.google.com' },
+      { protocol: 'https', hostname: 'raw.githubusercontent.com' },
+    ],
   },
+
   allowedDevOrigins: [
     'https://turner-nonbranded-jabberingly.ngrok-free.dev',
   ],

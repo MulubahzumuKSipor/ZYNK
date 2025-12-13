@@ -76,7 +76,7 @@ const TopRatedProductsList: React.FC<TopRatedProductsListProps> = ({ limit, titl
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h2 className={styles.heading}>{title}</h2>
         {limit && (
-          <a href="/top-rated" style={{ fontSize: "14px", color: "#3b82f6", textDecoration: "none" }}>
+          <a href="/bestsellers" style={{ fontSize: "14px", color: "#3b82f6", textDecoration: "none" }}>
             View All &rarr;
           </a>
         )}
