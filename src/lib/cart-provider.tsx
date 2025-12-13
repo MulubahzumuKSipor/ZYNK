@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
 import { supabase } from '@/lib/client'
 
 export type CartItem = {
@@ -34,16 +34,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
-  // Helper to get headers
-  const getHeaders = async (): Promise<HeadersInit> => {
+  // Helper: get headers with user info if logged in
+  const getHeaders = useCallback(async (): Promise<HeadersInit> => {
     const headers: HeadersInit = { 'Content-Type': 'application/json' }
     const { data: { session } } = await supabase.auth.getSession()
     if (session?.user?.id) headers['x-user-id'] = session.user.id
     return headers
-  }
+  }, [])
 
   // Fetch cart (also merges guest cart if logged in)
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     setIsLoading(true)
     try {
       const headers = await getHeaders()
@@ -57,11 +57,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [getHeaders])
 
+  // Initial fetch
   useEffect(() => {
     fetchCart()
-  }, [])
+  }, [fetchCart])
 
   // Listen for login and merge guest cart automatically
   useEffect(() => {
@@ -71,10 +72,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     })
     return () => authListener?.subscription.unsubscribe()
-  }, [])
+  }, [fetchCart])
 
-  // Add to cart
-  const addToCart = async (product_variant_id: number, quantity = 1) => {
+  // Add item
+  const addToCart = useCallback(async (product_variant_id: number, quantity = 1) => {
     try {
       const headers = await getHeaders()
       const res = await fetch('/api/add-to-cart', {
@@ -90,10 +91,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error(err)
       alert('Could not add item to cart.')
     }
-  }
+  }, [fetchCart, getHeaders])
 
   // Update item quantity
-  const updateCartItem = async (cart_item_id: number, quantity: number) => {
+  const updateCartItem = useCallback(async (cart_item_id: number, quantity: number) => {
     try {
       if (quantity < 1) return removeFromCart(cart_item_id)
       const headers = await getHeaders()
@@ -109,10 +110,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error(err)
       alert('Could not update item quantity.')
     }
-  }
+  }, [fetchCart, getHeaders])
 
   // Remove item
-  const removeFromCart = async (cart_item_id: number) => {
+  const removeFromCart = useCallback(async (cart_item_id: number) => {
     try {
       const headers = await getHeaders()
       const res = await fetch(`/api/add-to-cart?cart_item_id=${cart_item_id}`, {
@@ -126,7 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error(err)
       alert('Could not remove item from cart.')
     }
-  }
+  }, [fetchCart, getHeaders])
 
   const toggleCart = () => setIsOpen(prev => !prev)
   const openCart = () => setIsOpen(true)

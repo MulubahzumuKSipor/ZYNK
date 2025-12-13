@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ userId:
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }
 
-    // 1️⃣ Get token from Authorization header
+    // Get token from Authorization header
     const authHeader = req.headers.get("Authorization");
     const token = authHeader?.split(" ")[1];
 
@@ -19,27 +19,26 @@ export async function GET(req: NextRequest, context: { params: Promise<{ userId:
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2️⃣ Verify user with Supabase
+    // Verify user with Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user || user.id !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 3️⃣ Fetch all orders for this user
+    // Fetch all orders for this user
     const { rows: orders } = await pool.query(
       `SELECT order_id, total_amount, status, created_at
        FROM orders
-       WHERE user_id = $1
+       WHERE user_id = $1::uuid
        ORDER BY created_at DESC`,
       [userId]
     );
 
-    if (!orders.length) {
-      return NextResponse.json({ orders: [] }, { status: 200 });
-    }
+    // If no orders, return empty array
+    if (!orders.length) return NextResponse.json({ orders: [] }, { status: 200 });
 
-    // 4️⃣ Fetch items for each order
+    // Fetch items for each order
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const { rows: items } = await pool.query(
