@@ -3,7 +3,6 @@
 import { use } from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ProductList from "@/app/ui/components/products";
 import AddToCartWideButton from "@/app/ui/components/buttons/wide-add-to-cart";
 import { StarIcon } from "lucide-react";
 import styles from "@/app/ui/styles/detailed_product.module.css";

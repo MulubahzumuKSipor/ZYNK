@@ -6,7 +6,7 @@ import { useCart } from "@/lib/cart-provider"
 import styles from "@/app/ui/styles/cart_button.module.css"
 
 export default function CartButton() {
-  const { items, addToCart, updateCartItem, removeFromCart } = useCart()
+  const { items, updateCartItem, removeFromCart } = useCart()
   const [open, setOpen] = useState(false)
   const [bump, setBump] = useState(false)
 

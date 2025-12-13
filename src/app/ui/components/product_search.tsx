@@ -114,7 +114,10 @@ export default function ProductSearch({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const productsToSearch = controlledProducts ?? internalProducts ?? [];
+  const productsToSearch = useMemo(
+    () => controlledProducts ?? internalProducts ?? [],
+    [controlledProducts, internalProducts]
+  );
 
   const filtered = useMemo(() => {
     if (!debouncedQuery) return productsToSearch.slice(0, limit);
@@ -216,7 +219,7 @@ export default function ProductSearch({
                   const imageUrl = p.images?.[0]?.image_url;
 
                   return (
-                    <li key={String(key)} role="option" style={{ marginBottom: 0 }}>
+                    <li key={String(key)} role="option" style={{ marginBottom: 0 }} aria-selected="false">
                       <Link
                         href={`/shop/${p.product_id ?? p.id}`}
                         onClick={() => handleSelect(p)}
@@ -292,3 +295,5 @@ export default function ProductSearch({
       </div>
     );
 }
+
+

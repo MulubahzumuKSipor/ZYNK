@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { supabase } from "@/lib/client";
 
-export async function GET(req: NextRequest, context: { params: { userId: string } }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ userId: string }> }) {
   try {
-    const { userId } = context.params;
+    const { userId } = await context.params;
 
     if (!userId) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });

@@ -4,7 +4,6 @@ import Image from "next/image"
 import styles from "@/app/ui/styles/header.module.css"
 import Link from "next/link";
 import ProductSearch from "../product_search";
-import CartButton from "@/app/ui/components/buttons/cart"; // Import CartButton here**
 
 
 export default function Header() {

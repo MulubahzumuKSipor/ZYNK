@@ -5,7 +5,7 @@ import type { User } from "@supabase/supabase-js";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { userId: string } } // still plain object for your code
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authMiddleware(req);
@@ -15,13 +15,13 @@ export async function GET(
     }
 
     const authUser: User = authResult;
-    const { userId } = context.params; // no await
+    const { id } = await context.params; // no await
 
-    if (!userId) {
+    if (!id) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }
 
-    if (authUser.id !== userId) {
+    if (authUser.id !== id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -30,7 +30,7 @@ export async function GET(
       SELECT * FROM orders
       WHERE user_id = $1
     `,
-      [userId]
+      [id]
     );
 
     return NextResponse.json({ orders: rows || [] }, { status: 200 });

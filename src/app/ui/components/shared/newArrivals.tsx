@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import styles from "@/app/ui/styles/product.module.css";
 import ProductList from "../products";
 import ProductSkeleton from "@/app/ui/skeletons/few_product_skeleton";

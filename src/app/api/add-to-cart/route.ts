@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 
-/** Get logged-in user ID (from headers for now) */
+/** Get logged-in user ID */
 function getUserId(req: NextRequest): number | null {
   const header = req.headers.get("x-user-id");
   if (!header) return null;
@@ -9,18 +9,42 @@ function getUserId(req: NextRequest): number | null {
   return Number.isInteger(n) ? n : null;
 }
 
-/** Get guest session ID from cookies */
-function getSessionId(req: NextRequest): string | null {
-  return req.cookies.get("session_id")?.value ?? null;
+/** Get or create guest session ID */
+function getSessionId(req: NextRequest, res?: NextResponse): string {
+  let sessionId = req.cookies.get("session_id")?.value;
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    res?.cookies.set("session_id", sessionId, { path: "/", httpOnly: true });
+  }
+  return sessionId;
 }
 
-/** GET: fetch cart items */
-export async function GET(req: NextRequest) {
-  try {
-    const user_id = getUserId(req);
-    const session_id = getSessionId(req);
+/** Merge guest cart into user cart on login */
+async function mergeGuestCart(userId: number, sessionId: string) {
+  if (!sessionId) return;
+  const sql = `
+    INSERT INTO cart_items (user_id, product_variant_id, quantity, added_at, updated_at)
+    SELECT $1, product_variant_id, quantity, added_at, updated_at
+    FROM cart_items
+    WHERE session_id = $2
+    ON CONFLICT (user_id, product_variant_id)
+    DO UPDATE SET quantity = cart_items.quantity + EXCLUDED.quantity, updated_at = NOW();
+  `;
+  await pool.query(sql, [userId, sessionId]);
+  // clear guest cart
+  await pool.query(`DELETE FROM cart_items WHERE session_id = $1`, [sessionId]);
+}
 
-    if (!user_id && !session_id) return NextResponse.json([], { status: 200 });
+/** GET cart items */
+export async function GET(req: NextRequest, res: NextResponse) {
+  try {
+    const userId = getUserId(req);
+    const sessionId = getSessionId(req, res);
+
+    if (!userId && !sessionId) return NextResponse.json([], { status: 200 });
+
+    // If logged-in, merge guest cart first
+    if (userId && sessionId) await mergeGuestCart(userId, sessionId);
 
     const sql = `
       SELECT
@@ -32,11 +56,10 @@ export async function GET(req: NextRequest) {
       FROM cart_items ci
       JOIN product_variants v ON ci.product_variant_id = v.id
       JOIN products p ON v.product_id = p.id
-      WHERE ${user_id ? "ci.user_id = $1" : "ci.session_id = $1"}
+      WHERE ${userId ? "ci.user_id = $1" : "ci.session_id = $1"}
       ORDER BY ci.added_at DESC
     `;
-
-    const { rows } = await pool.query(sql, [user_id ?? session_id]);
+    const { rows } = await pool.query(sql, [userId ?? sessionId]);
     return NextResponse.json(rows, { status: 200 });
   } catch (err) {
     console.error("GET /api/cart error:", err);

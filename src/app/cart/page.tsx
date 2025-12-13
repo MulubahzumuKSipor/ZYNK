@@ -5,7 +5,7 @@ import { useCart } from '@/lib/cart-provider'
 import styles from '@/app/ui/styles/cart_page.module.css'
 
 export default function CartPage() {
-  const { items, total, isLoading, addToCart, updateCartItem, removeFromCart } = useCart()
+  const { items, total, isLoading, updateCartItem, removeFromCart } = useCart()
 
   return (
     <main className={styles.main}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import styles from "@/app/ui/styles/contact.module.css";
 
 export default function ContactUsPage() {

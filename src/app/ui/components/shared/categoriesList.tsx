@@ -63,13 +63,9 @@ export default function CategoryList({ className = "" }: { className?: string })
           if (catId == null) continue; // skip rows without category
 
           if (!map.has(catId)) {
-            // pick a representative image if available
-            let repImage = "";
 
             if (Array.isArray(row.categories_images) && row.categories_images.length > 0) {
               // images might be nulls; find first valid image_url or thumbnail_url
-              const firstImg = row.categories_images.find((img) => img && (img.image_url || img.thumbnail_url));
-              if (firstImg) repImage = (firstImg.image_url ?? firstImg.thumbnail_url ?? "") as string;
             }
 
             map.set(catId, {
