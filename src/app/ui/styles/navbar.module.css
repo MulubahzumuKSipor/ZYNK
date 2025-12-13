@@ -190,6 +190,8 @@
   }
 
   .navList {
+    overflow-y: auto;
+    overflow-x: hidden;
     border: 2px solid;
     gap: 10px;
     border-radius: 20px;

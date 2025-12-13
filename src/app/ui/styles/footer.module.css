@@ -73,3 +73,20 @@
   /* The glow now matches the theme's yellow accent */
   filter: drop-shadow(0 0 10px rgba(255, 214, 0, 0.8));
 }
+
+.img{
+
+}
+
+@media (max-width: 850px) {
+  .img{
+    max-width: 70px;
+  }
+}
+
+@media (max-width: 370px) {
+  .img{
+    max-width: 60px;
+  }
+}
+
