@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { supabase } from '@/lib/client'
+import { API_URL } from '@/app/types/api'
 
 export type CartItem = {
   cart_item_id: number
@@ -32,22 +33,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const total = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  )
 
-  // Fetch Cart
+  // ---------------------------
+  // Fetch cart
+  // ---------------------------
   const fetchCart = async () => {
     setIsLoading(true)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const headers: HeadersInit = { 'Content-Type': 'application/json' }
-      // Add user header if needed:
-      // if (session?.user?.id) headers['x-user-id'] = session.user.id
-
-      const res = await fetch('/api/add-to-cart', { headers })
-      if (res.ok) {
-        const data = await res.json()
-        setItems(data)
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
       }
+
+      const res = await fetch(`${API_URL}/add-to-cart`, {
+        headers,
+        credentials: 'include',
+      })
+
+      if (!res.ok) throw new Error('Failed to fetch cart')
+
+      const data = await res.json()
+      setItems(data)
     } catch (error) {
       console.error('Failed to fetch cart:', error)
     } finally {
@@ -59,16 +68,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     fetchCart()
   }, [])
 
-  // Add / Increment Item
+  // ---------------------------
+  // Add item
+  // ---------------------------
   const addToCart = async (product_variant_id: number, quantity = 1) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const headers: HeadersInit = { 'Content-Type': 'application/json' }
-      // if (session?.user?.id) headers['x-user-id'] = session.user.id
-
-      const res = await fetch('/api/add-to-cart', {
+      const res = await fetch(`${API_URL}/add-to-cart`, {
         method: 'POST',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ product_variant_id, quantity }),
       })
 
@@ -82,21 +90,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Update Item Quantity
+  // ---------------------------
+  // Update quantity
+  // ---------------------------
   const updateCartItem = async (cart_item_id: number, quantity: number) => {
     try {
-      if (quantity < 1) return removeFromCart(cart_item_id)
+      if (quantity < 1) {
+        await removeFromCart(cart_item_id)
+        return
+      }
 
-      const { data: { session } } = await supabase.auth.getSession()
-      const headers: HeadersInit = { 'Content-Type': 'application/json' }
-
-      const res = await fetch('/api/add-to-cart', {
+      const res = await fetch(`${API_URL}/add-to-cart`, {
         method: 'PATCH',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ cart_item_id, quantity }),
       })
 
       if (!res.ok) throw new Error('Failed to update cart item')
+
       await fetchCart()
     } catch (error) {
       console.error(error)
@@ -104,18 +116,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Remove Item
+  // ---------------------------
+  // Remove item
+  // ---------------------------
   const removeFromCart = async (cart_item_id: number) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const headers: HeadersInit = { 'Content-Type': 'application/json' }
-
-      const res = await fetch(`/api/add-to-cart?cart_item_id=${cart_item_id}`, {
-        method: 'DELETE',
-        headers,
-      })
+      const res = await fetch(
+        `${API_URL}/add-to-cart?cart_item_id=${cart_item_id}`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        }
+      )
 
       if (!res.ok) throw new Error('Failed to remove cart item')
+
       await fetchCart()
     } catch (error) {
       console.error(error)
@@ -123,6 +139,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // ---------------------------
+  // UI controls
+  // ---------------------------
   const toggleCart = () => setIsOpen(prev => !prev)
   const openCart = () => setIsOpen(true)
   const closeCart = () => setIsOpen(false)
@@ -150,6 +169,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export const useCart = () => {
   const context = useContext(CartContext)
-  if (!context) throw new Error('useCart must be used within a CartProvider')
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider')
+  }
   return context
 }
