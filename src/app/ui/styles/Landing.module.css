@@ -1,7 +1,7 @@
 .heroWrapper {
   /* width: 100%; */
   background-color: #f8f9fa; /* Light grey/white background */
-  padding: 10% 2rem 0%;
+  padding: 7% 4rem 0%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +12,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   width: 100%;
   align-items: center;
 }
@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* gap: 1.5rem; */
+  gap: 1rem;
 }
 
 .brandBadge {
@@ -64,7 +64,7 @@
 }
 
 .heroButton {
-  background-color: #111;
+  background-color: #1739aa;
   color: white;
   padding: 1rem 2.5rem;
   font-size: 1.1rem;
@@ -127,7 +127,7 @@
   width: 100%;
   height: auto;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  /* box-shadow: 0 20px 40px rgba(0,0,0,0.1); */
   /* Optional: Rotate slightly for dynamic look */
   /* transform: rotate(2deg); */
 }
