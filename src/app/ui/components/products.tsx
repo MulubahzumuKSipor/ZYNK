@@ -15,7 +15,8 @@ interface ProductCardProps {
     compare_at_price?: number | string | null;
     images?: { image_url?: string | null }[] | null;
     isNew?: boolean;
-    isTopRated?: boolean;  // ✅ add this
+    isTopRated?: boolean;
+    isHot?: boolean;
     rating?: number | null;
     stock_quantity?: number | null;
     category_name?: string | null;
@@ -60,6 +61,16 @@ const ProductList: React.FC<ProductCardProps> = ({ product }) => {
       >
         <div className={styles.imageWrapper}>
           {product.isNew && <div className={`${styles.tag} ${styles.newTag}`}>NEW</div>}
+          {product.isTopRated && (
+            <div className={`${styles.tag} ${styles.topRatedTag}`}>
+              TOP RATED
+            </div>
+          )}
+          {product.isHot && (
+            <div className={`${styles.tag} ${styles.hotTag}`}>
+              HOT
+            </div>
+          )}
           {stockLow && <div className={`${styles.tag} ${styles.limitedTag}`}>LIMITED</div>}
           {comparePriceNum != null && (
             <div className={`${styles.tag} ${styles.saleTag}`}>SALE</div>

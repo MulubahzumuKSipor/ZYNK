@@ -3,9 +3,7 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-// import { createClient } from "@supabase/supabase-js";
 import { supabase } from "@/lib/client";
-
 
 /**
  * Types
@@ -39,27 +37,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json<ApiResponse>({ error: "All fields are required" }, { status: 400 });
     }
 
-    // ✅ Check if email already exists in Postgres
+    // ✅ Check if email already exists in Postgres (only confirmed users are here)
     const { rows } = await pool.query(
-      "SELECT email_confirmed_at FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE email = $1",
       [email]
     );
     const existingUser = rows[0];
 
     if (existingUser) {
-      if (existingUser.email_confirmed_at) {
-        // Verified → suggest forgot password
-        return NextResponse.json<ApiResponse>({
-          error: "Email already exists. Did you forget your password?",
-          redirect: "/auth/forgot-password?email=" + encodeURIComponent(email),
-        }, { status: 409 });
-      } else {
-        // Not verified → suggest resend verification
-        return NextResponse.json<ApiResponse>({
-          error: "Please verify your email before registering again.",
-          redirect: "/auth/resend?email=" + encodeURIComponent(email),
-        }, { status: 409 });
-      }
+      return NextResponse.json<ApiResponse>({
+        error: "Email already exists. Did you forget your password?",
+        redirect: "/auth/forgot-password?email=" + encodeURIComponent(email),
+      }, { status: 409 });
     }
 
     // ✅ Create user in Supabase (anon client)
@@ -80,17 +69,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json<ApiResponse>({ error: "Failed to create user" }, { status: 500 });
     }
 
-    // ✅ Save user info in Postgres (without password)
-    const insertResult = await pool.query(
-      `INSERT INTO users (
-        username, email, phone, role, status, user_id, subscribed, user_type
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [username, email, phone, "user", "pending", userId, false, user_type ?? "user"]
-    );
 
     return NextResponse.json<ApiResponse>({
       message: "User registered. Please check your email to verify your account.",
-      user: insertResult.rows[0],
     }, { status: 200 });
 
   } catch (err: unknown) {

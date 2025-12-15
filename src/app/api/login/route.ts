@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { createClient } from "@supabase/supabase-js";
+import { mergeGuestCartToUser } from "@/lib/cartService";
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseAnonKey = process.env.SUPABASE_KEY!;
@@ -27,19 +28,38 @@ export async function POST(request: NextRequest) {
 
     const userId = data.user.id;
 
-    // 2️⃣ Fetch user info from PostgreSQL
-    const { rows } = await pool.query("SELECT id, username, email, phone, role, status, created_at, updated_at, user_id FROM users WHERE user_id = $1", [userId]);
+    // 2️⃣ Merge guest cart if session exists
+    const sessionId = request.cookies.get("session_id")?.value;
+    if (sessionId) {
+      await mergeGuestCartToUser(userId, sessionId);
+    }
+
+    // 3️⃣ Fetch user info from PostgreSQL
+    const { rows } = await pool.query(
+      "SELECT id, username, email, phone, role, status, created_at, updated_at, user_id FROM users WHERE user_id = $1",
+      [userId]
+    );
     if (!rows.length) {
       return NextResponse.json({ error: "User profile not found." }, { status: 404 });
     }
 
     const user = rows[0];
 
-    return NextResponse.json({
+    // 4️⃣ Prepare response
+    const res = NextResponse.json({
       message: "Login successful.",
       user,
       access_token: data.session?.access_token
     });
+
+    if (sessionId) {
+      res.cookies.delete({
+        name: "session_id",
+        path: "/",
+      });
+    }
+
+    return res;
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: err || "Server error" }, { status: 500 });

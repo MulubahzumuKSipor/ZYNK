@@ -11,6 +11,19 @@
   padding: 1rem 7rem;
 }
 
+.topRatedTag {
+  background-color: #f59e0b;
+  color: #111827;
+  font-weight: 700;
+}
+
+.hotTag {
+  background-color: #a40707;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+
 .heading, .title {
   font-size: 2rem;
   font-weight: 700;

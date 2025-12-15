@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN product_images i ON i.product_id = p.id
       ${whereSql}
       GROUP BY p.id, v.id, c.id
-      ORDER BY CAST(p.rating AS NUMERIC) DESC, p.id DESC
+      ORDER BY LOWER(p.title) ASC, CAST(p.rating AS NUMERIC) DESC
     `;
     // NOTE: Also applying CAST to p.rating in the ORDER BY clause to ensure numeric sorting.
 
@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
       if (!isNaN(parsedLimit) && parsedLimit > 0) {
         sqlQuery += ` LIMIT $${paramIndex}`;
         queryValues.push(parsedLimit);
+        paramIndex++;
       }
     }
 

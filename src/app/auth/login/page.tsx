@@ -19,15 +19,15 @@ export default function LoginPage() {
   const [unverified, setUnverified] = useState(false)
 
   // --- Redirect if already logged in ---
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        router.replace('/shop') // redirect to shop if user is already logged in
-      }
-    }
-    checkLoggedIn()
-  }, [router])
+  // useEffect(() => {
+  //   const checkLoggedIn = async () => {
+  //     const { data: { session } } = await supabase.auth.getSession()
+  //     if (session?.user) {
+  //       router.replace('/shop') // redirect to shop if user is already logged in
+  //     }
+  //   }
+  //   checkLoggedIn()
+  // }, [router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })

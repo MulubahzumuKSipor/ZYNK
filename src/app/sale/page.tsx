@@ -1,79 +1,79 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { AlertCircle, TrendingUp, AlertTriangle } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import ProductList from "@/app/ui/components/products";
 import styles from "@/app/ui/styles/product.module.css";
-import AddToCartButton from "../ui/components/buttons/add-to-cart";
-import BestSellersSkeleton from "../ui/skeletons/product_skeleton";
 
-// Interface for product
-interface BestSellerProduct {
-  product_id: number;
-  title: string;
-  description: string;
-  brand: string | null;
-  price: number | string | null;
-  total_stock: number;
-  total_sold: number;
-  type: "BEST_SELLER" | "LOW_STOCK";
-  image_url: [] | string | null;
+interface Product {
+  product_id?: number;
+  title?: string;
+  brand?: string | null;
+  price?: number | string | null;
+  compare_at_price?: number | string | null;
+  images?: { image_url?: string | null }[] | null;
+  rating?: number | null;
+  stock_quantity?: number | null;
+  category_name?: string | null;
+  isNew?: boolean;
 }
 
-export default function BestSellersPage() {
-  const [products, setProducts] = useState<BestSellerProduct[]>([]);
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBestSellers = async () => {
+    const fetchProducts = async () => {
       try {
+        setError(null);
         setLoading(true);
-        const res = await fetch("/api/products");
 
-        if (!res.ok) throw new Error(`Failed to fetch best sellers: ${res.status}`);
+        const res = await fetch("/api/products", { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(`Failed to fetch products: HTTP ${res.status}`);
+        }
 
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+
+        const data: Product[] = await res.json();
+
+        // console.table(
+        //   data.map(p => ({
+        //     title: p.title,
+        //     rating: p.rating,
+        //     type: typeof p.rating,
+        //   }))
+        // );
+
+        const highRatedProducts = Array.isArray(data)
+        ? data.filter((product) => {
+            const rating = Number(product.rating);
+            return Number.isFinite(rating) && rating >= 4.5;
+          })
+        : [];
+
+
+        setProducts(highRatedProducts);
       } catch (err) {
-        console.error(err);
-        setError("Could not load products. Please check the API endpoint.");
+        console.error("Products fetch error:", err);
+        setError("Could not load products. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBestSellers();
+    fetchProducts();
   }, []);
 
-  const formatPrice = (price: number | string | null) => {
-    if (price === null || isNaN(Number(price))) return "N/A";
-    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(price));
-  };
+  if (loading) {
+    return (
+      <div className={styles.centerMessage}>
+        <Loader2 className="animate-spin" size={40} color="#1ab26e" />
+        <p>Loading products…</p>
+      </div>
+    );
+  }
 
-  const renderTag = (product: BestSellerProduct) => {
-    if (product.type === "BEST_SELLER") {
-      return (
-        <div className={`${styles.statusTag} ${styles.bestSellerTag}`}>
-          <TrendingUp size={14} style={{ marginRight: 4 }} /> BEST SELLER
-        </div>
-      );
-    }
-    if (product.type === "LOW_STOCK") {
-      return (
-        <div className={`${styles.statusTag} ${styles.lowStockTag}`}>
-          <AlertTriangle size={14} style={{ marginRight: 4 }} /> LOW STOCK
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // --- Loading state ---
-  if (loading) return <BestSellersSkeleton />;
-
-  // --- Error state ---
   if (error) {
     return (
       <div className={styles.centerMessage}>
@@ -83,60 +83,27 @@ export default function BestSellersPage() {
     );
   }
 
-  // --- Empty state ---
-  if (products.length === 0) {
+  if (!products.length) {
     return (
       <div className={styles.container}>
-        <h1 className={styles.heading}>🏆 Top Sellers 🏆</h1>
+        <h1 className={styles.heading}>Top Rated Products</h1>
         <div className={styles.centerMessage}>
-          <h2>No products available</h2>
-          <p>Check back later or ensure the product feed is populated.</p>
+          <h2>No high-rated products found</h2>
+          <p>Only products rated above 4.5 are displayed.</p>
         </div>
       </div>
     );
   }
 
-  // --- Main product grid ---
   return (
     <div className={styles.container}>
-      <h1 className={styles.heading}>Trending</h1>
+      <h1 className={styles.heading}>Hottest Products</h1>
       <div className={styles.grid}>
-        {products.map((product) => (
-          <div key={product.product_id} className={styles.card}>
-            <Link href={`/shop/${product.product_id}`} className={styles.link}>
-              <div className={styles.imageWrapper}>
-                {renderTag(product)}
-                {product.image_url ? (
-                  <Image
-                    src={product.image_url[0]}
-                    alt={product.title}
-                    fill
-                    className={styles.productImage}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 30vw"
-                  />
-                ) : (
-                  <div className={styles.noImage}>No Image</div>
-                )}
-              </div>
-
-              <div className={styles.content}>
-                <span className={styles.brand}>{product.brand ?? "Popular"}</span>
-                <h2 className={styles.title}>{product.title}</h2>
-                <p className={styles.description}>
-                  {product.description?.slice(0, 100) ?? "Check out this top product!"}...
-                </p>
-
-                {product.type === "LOW_STOCK" && (
-                  <div className={styles.lowStockText}>Only {product.total_stock} left!</div>
-                )}
-
-                <div className={styles.footer}>
-                  <span className={styles.price}>{formatPrice(product.price)}</span>
-                  <AddToCartButton productVariantId={product.product_id} quantity={1} />
-                </div>
-              </div>
-            </Link>
-          </div>
+        {products.map((p) => (
+          <ProductList
+            key={p.product_id ?? `${p.title}-${crypto.randomUUID()}`}
+            product={{ ...p, isHot: true }}
+          />
         ))}
       </div>
     </div>

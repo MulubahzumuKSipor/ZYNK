@@ -24,7 +24,7 @@ interface TopRatedProductsListProps {
   title?: string;
 }
 
-const TopRatedProductsList: React.FC<TopRatedProductsListProps> = ({ limit, title = "⭐ Top Rated Products ⭐" }) => {
+const TopRatedProductsList: React.FC<TopRatedProductsListProps> = ({ limit, title = "⭐ Top Rated Products" }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

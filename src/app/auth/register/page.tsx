@@ -41,15 +41,15 @@ export default function RegisterPage() {
     }
   }
 
-    useEffect(() => {
-      const checkLoggedIn = async () => {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session?.user) {
-          router.replace('/shop') // redirect to shop if user is already logged in
-        }
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        router.replace('/shop') // redirect to shop if user is already logged in
       }
-      checkLoggedIn()
-    }, [router])
+    }
+    checkLoggedIn()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,9 +67,10 @@ export default function RegisterPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Registration failed')
 
-      setMessage(
-        'Registration successful! Check your email to verify your account.'
-      )
+      // ✅ Pass the email via query params to /auth/verify
+      router.push(`/auth/verify?email=${encodeURIComponent(form.email)}`)
+
+      // Clear form (optional, since we redirect)
       setForm({
         username: '',
         email: '',
@@ -78,10 +79,6 @@ export default function RegisterPage() {
         user_type: 'user',
         subscribed: false,
       })
-
-      setTimeout(() => {
-        router.push('/auth/resend')
-      }, 4000)
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -157,10 +154,6 @@ export default function RegisterPage() {
           >
             <option value="user">User</option>
             <legend>** Only user option is available for now</legend>
-            {/* <option value="buyer">Buyer</option>
-            <option value="seller">Seller</option>
-            <option value="exclusive buyer">Exclusive Buyer</option>
-            <option value="exclusive seller">Exclusive Seller</option> */}
           </select>
 
           {/* --- Subscribe Checkbox --- */}

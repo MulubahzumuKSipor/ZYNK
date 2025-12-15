@@ -22,7 +22,7 @@
 /* --- Registration Card Container --- */
 .registerCard {
   margin: 0 auto;
-  width: 60%;
+  width: 600px;
   /* max-width: 450px; Slightly wider card for more inputs */
   padding: 7rem 2.5rem;
   /* background: white; */
@@ -161,7 +161,7 @@
 
   .registerCard {
     /* Full width on small screens, remove side padding */
-    width: 100%;
+    width: 90%;
     max-width: none;
     padding: 1.5rem;
     border-radius: 0;
@@ -177,3 +177,27 @@
       font-size: 0.875rem;
   }
 }
+
+
+@media (max-width: 750px) {
+
+  .registerCard {
+    /* Full width on small screens, remove side padding */
+    width: 90%;
+    max-width: none;
+    padding: 1.5rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .message, .error {
+      font-size: 0.875rem;
+  }
+}
+
+
