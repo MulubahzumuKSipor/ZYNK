@@ -1,7 +1,7 @@
 .heroWrapper {
   /* width: 100%; */
   background-color: #f8f9fa; /* Light grey/white background */
-  padding: 10% 2rem;
+  padding: 10% 2rem 0%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -155,7 +155,7 @@
 /* --- Mobile Responsiveness --- */
 @media (max-width: 850px) {
   .heroWrapper{
-    padding: 30% 2rem;
+    padding: 30% 2rem 0%;
   }
   .heroContainer {
     grid-template-columns: 1fr;
