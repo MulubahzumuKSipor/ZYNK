@@ -56,4 +56,7 @@ export interface Product {
   images: ProductImage[];
   categories?: ProductCategory[];
   reviews?: Review[];
+  isTopRated?: boolean;
 }
+
+

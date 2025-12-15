@@ -6,6 +6,7 @@ import Image from "next/image";
 import AddToCartWideButton from "@/app/ui/components/buttons/wide-add-to-cart";
 import { StarIcon } from "lucide-react";
 import styles from "@/app/ui/styles/detailed_product.module.css";
+import Link from "next/link";
 
 interface ProductImage {
   image_url: string;
@@ -181,33 +182,34 @@ export default function ProductPage({ params }: ProductPageProps) {
       {/* RELATED PRODUCTS */}
       <div className={styles.relatedGrid}>
         {related.map((p) => (
-          <div key={p.product_id} className={styles.relatedCard}>
-            <div className={styles.relatedImageWrapper}>
-              {p.images?.[0]?.image_url ? (
-                <Image src={p.images[0].image_url} alt={p.title} width={100} height={100} />
-              ) : (
-                <div className={styles.noImage}>No Image</div>
-              )}
-              <div className={styles.relatedBadges}>
-                {p.isNew && <span className={`${styles.relatedBadge} ${styles.new}`}>NEW</span>}
-                {p.isTopRated && <span className={`${styles.relatedBadge} ${styles.topRated}`}>TOP RATED</span>}
-                {p.stock_quantity <= 5 && <span className={`${styles.relatedBadge} ${styles.limited}`}>LIMITED</span>}
-                {p.compare_at_price && <span className={`${styles.relatedBadge} ${styles.sale}`}>SALE</span>}
+          <Link key={p.product_id} className="link" href={`/shop/${p.product_id}`}>
+
+            <div key={p.product_id} className={styles.relatedCard}>
+              <div className={styles.relatedImageWrapper}>
+                {p.images?.[0]?.image_url ? (
+                  <Image src={p.images[0].image_url} alt={p.title} width={100} height={100} />
+                ) : (
+                  <div className={styles.noImage}>No Image</div>
+                )}
+                <div className={styles.relatedBadges}>
+                  {p.isNew && <span className={`${styles.relatedBadge} ${styles.new}`}>NEW</span>}
+                  {p.isTopRated && <span className={`${styles.relatedBadge} ${styles.topRated}`}>TOP RATED</span>}
+                  {p.stock_quantity <= 5 && <span className={`${styles.relatedBadge} ${styles.limited}`}>LIMITED</span>}
+                  {p.compare_at_price && <span className={`${styles.relatedBadge} ${styles.sale}`}>SALE</span>}
+                </div>
+              </div>
+              <div className={styles.relatedDetails}>
+                <span className={styles.relatedBrand}>{p.brand ?? "Popular"}</span>
+                <span className={styles.relatedTitle}>{p.title}</span>
+                <div className={styles.relatedPriceRow}>
+                  <span className={styles.relatedPrice}>${p.price}</span>
+                  {p.compare_at_price && <span className={styles.relatedComparePrice}>${p.compare_at_price}</span>}
+                </div>
               </div>
             </div>
-            <div className={styles.relatedDetails}>
-              <span className={styles.relatedBrand}>{p.brand ?? "Popular"}</span>
-              <span className={styles.relatedTitle}>{p.title}</span>
-              <div className={styles.relatedPriceRow}>
-                <span className={styles.relatedPrice}>${p.price}</span>
-                {p.compare_at_price && <span className={styles.relatedComparePrice}>${p.compare_at_price}</span>}
-              </div>
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
-
-
     </div>
   );
 }

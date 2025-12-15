@@ -1,256 +1,186 @@
-/* .landing {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
-
-.user{
-  border: solid black 5px;
-  border-radius: 20px;
-}
-
-
-
-.landing{
-  background-image: url("/background.png");
-  background-size: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* background-size: 100%; */
-  /* height: 100vh; */
-  width: 100%;
-}
-
-
-@media (max-width: 850px){
-  .landing{
-    padding-top: 50px;
-    background-size: cover;
-  }
-}
-
-
-.belowHeader{
-  background-color: #e9ebec;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 120px;
-  padding-left: 120px;
-  list-style: none;
-}
-
-.links{
-  list-style: none;
-  text-decoration: none;
-  font-weight: 200;
-}
-
-.buttons{
-  align-items: center;
-  display: flex
-}
-
-.hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 80px; /* larger gap between image and text */
-  padding: 92px 50px; /* hero spacing from top */
-  flex-wrap: wrap;
-  min-height: 78vh; /* hero section fills most of screen */
-}
-
-.heroLeft {
-  min-width: 200px;
-  min-height: 300px;
+.heroWrapper {
+  /* width: 100%; */
+  background-color: #f8f9fa; /* Light grey/white background */
+  padding: 10% 2rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 80vh; /* Takes up most of the screen */
 }
 
-.heroRight {
-  min-width: 200px;
+.heroContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1200px;
+  width: 100%;
+  align-items: center;
+}
+
+/* --- Left Side: Content --- */
+.heroContent {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  min-height: 100px;
+  align-items: flex-start;
+  /* gap: 1.5rem; */
 }
 
-
-.heroButton {
-    padding: 15px 35px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 8px;
-    width: fit-content;
-
-    /* THEME FIX: Use the high-contrast button color */
-    background-color: var(--button-color);
-
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s;
+.brandBadge {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.heroButton:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 87, 51, 0.4); /* Shadow matches button color */
-    background-color: #c94628; /* Slightly darker shade of the button color */
-}
-
-/* --- Text Background (Glass container) --- */
-.textBackground {
-  /* width: 10px; */
-  position: relative;
-  padding: 30px;
-  border-radius: 20px;
-  overflow: hidden;
-  /* Current background is good for glass: semi-transparent dark overlay */
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  /* Set text color for all children inside the glass */
-  color: white;
-}
-
-/* Ensure Title and Description use the white color set above */
 .heroTitle {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.2;
-    /* color: white is inherited from .textBackground */
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+}
+
+.accentText {
+  color: #4f46e5; /* Brand color */
 }
 
 .heroDescription {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #555;
+  max-width: 500px;
+}
+
+/* CTA Area */
+.ctaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.heroButton {
+  background-color: #111;
   color: white;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    max-width: 500px;
-    /* color: white is inherited from .textBackground */
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Zigzag overlay */
-.textBackground::after {
-  content: "";
+.heroButton:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.shippingNote {
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Stats Row */
+.statsRow {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e5e5;
+  width: 100%;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statItem strong {
+  font-size: 1.5rem;
+  color: #111;
+}
+
+.statItem span {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+/* --- Right Side: Image --- */
+.heroImageWrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  /* Optional: Rotate slightly for dynamic look */
+  /* transform: rotate(2deg); */
+}
+
+/* Decorative floating card */
+.floatingCard {
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  /* background: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.05) 10px,
-    rgba(0, 0, 0, 0.05) 10px,
-    rgba(0, 0, 0, 0.05) 20px
-  ); */
-  animation: moveZigzag 10s linear infinite;
-  z-index: 0;
+  bottom: 40px;
+  left: -20px;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  animation: float 4s ease-in-out infinite;
 }
 
-/* Make text and button appear above the glass */
-.textBackground h1,
-.textBackground p,
-.textBackground button {
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-/* responsive adjustments */
-@media (max-width: 900px) {
-  .hero {
-    /* flex-direction: column-reverse; */
-    padding: 60px 20px;
+/* --- Mobile Responsiveness --- */
+@media (max-width: 850px) {
+  .heroWrapper{
+    padding: 30% 2rem;
+  }
+  .heroContainer {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
 
+  .heroContent {
+    align-items: center;
   }
 
   .heroTitle {
     font-size: 2.5rem;
-    text-align: center;
   }
 
-  .heroDescription {
-    font-size: 1.2rem;
-    text-align: center;
-  }
-
-  .heroButton {
-    align-self: center;
-  }
-}
-
-/* Slide-in and slide-out animations */
-.slideIn {
-  display: flex;
-  /* margin-left: 20px ; */
-  align-items: center;
-  /* height: 300px; */
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.slideOut {
-  transform: translateX(-100px);
-  opacity: 0;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-/* Bottom Link Container - subtle glass effect is good */
-.bottom_links {
-    display: flex;
-    justify-content: space-evenly;
+  .ctaGroup {
     align-items: center;
-    gap: 30px;
+  }
 
-    /* Using a primary blue tint for the glass overlay */
-    background-color: rgba(0, 51, 102, 0.1); /* Subtle primary blue overlay */
-
-    backdrop-filter: blur(5px);
-    border-radius: 15px;
-    padding: 15px 30px; /* Ensure padding for a better look */
-}
-
-.bottom_links a {
-    display: inline-flex;
-    align-items: center;
+  .statsRow {
     justify-content: center;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-
-    /* Set icon color to the vibrant secondary blue */
-    color: var(--secondary-color);
-}
-
-.bottom_links a:hover {
-    transform: scale(1.2);
-    opacity: 1;
-    /* You may want to darken the icon on hover, or use the accent color */
-    color: var(--accent-color);
-}
-
-.bottom_links svg {
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-    /* Ensure the SVG inherits the color from its parent <a> tag */
-    fill: currentColor;
-}
-
-
-@media (max-width: 600px) {
-  .bottom_links {
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 15px 0;
+    gap: 2rem;
   }
-  .bottom_links svg {
-    width: 30px;
-    height: 30px;
+
+  .heroImageWrapper {
+    order: -1; /* Puts image on top on mobile */
   }
 }

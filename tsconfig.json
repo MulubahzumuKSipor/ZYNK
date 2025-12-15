@@ -38,7 +38,7 @@
     "**/*.mts",
     ".next\\dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts"
-, "src/backend_routes/lib/database.js", "src/backend_routes/index.js"  ],
+, "src/backend_routes/lib/database.js", "src/backend_routes/index.js", "src/app/ui/components/buttons/mini-cart.txs"  ],
   "exclude": [
     "node_modules"
   ]

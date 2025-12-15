@@ -75,7 +75,7 @@ export default function SpecialsPage() {
           <Link
             key={product.product_id}
             href={`/shop/${product.product_id}`}
-            className={styles.card}
+            className={`${styles.card} link`}
           >
             <div className={styles.imageWrapper}>
               <div className={`${styles.tag} ${styles.limitedTag}`}>LOW STOCK</div>

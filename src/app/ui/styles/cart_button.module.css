@@ -235,3 +235,16 @@
 .checkoutButton:hover {
   background-color: #0b5ed7;
 }
+
+@media (max-width: 750px) {
+  /* .container{
+    padding: 10px;
+    border-radius: 13px;
+    display: inline-block;
+    position: absolute;
+    top: 1000%;
+    background: red;
+    width: 100px;
+  } */
+
+}

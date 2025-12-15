@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Loader2, Mail, XCircle, CheckCircle } from 'lucide-react'
 import styles from '@/app/ui/styles/verify.module.css'
 
-export default function VerifyPage() {
+// 1. Move the main logic into a separate "Content" component
+function VerifyContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const email = searchParams.get('email') || ''
@@ -14,7 +15,6 @@ export default function VerifyPage() {
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Redirect to register/login if no email
   useEffect(() => {
     if (!email) router.replace('/auth/register')
   }, [email, router])
@@ -45,47 +45,66 @@ export default function VerifyPage() {
   }
 
   return (
+    <div className={styles.card}>
+      <Mail size={48} className={styles.icon} />
+      <h1 className={styles.title}>Check Your Email</h1>
+      <p className={styles.description}>
+        A verification link has been sent to <strong>{email}</strong>. <br />
+        Please check your inbox and click the link to activate your account.
+      </p>
+
+      {message && (
+        <p className={styles.message}>
+          <CheckCircle size={18} style={{ marginRight: 8 }} />
+          {message}
+        </p>
+      )}
+      {error && (
+        <p className={styles.error}>
+          <XCircle size={18} style={{ marginRight: 8 }} />
+          {error}
+        </p>
+      )}
+
+      <button
+        className={styles.button}
+        onClick={handleResend}
+        disabled={loading}
+      >
+        {loading ? (
+          <span className={styles.loadingState}>
+            <Loader2 className={styles.spinner} size={20} />
+            Resending...
+          </span>
+        ) : (
+          'Resend Verification Email'
+        )}
+      </button>
+
+      <p className={styles.footerText}>
+        {"Didn't receive the email? Click above to resend."}
+      </p>
+    </div>
+  )
+}
+
+// 2. Create a Loading Fallback component (optional but recommended)
+function VerifyFallback() {
+  return (
+    <div className={styles.card}>
+      <Loader2 className={styles.spinner} size={48} />
+      <p className={styles.description}>Loading verification details...</p>
+    </div>
+  )
+}
+
+// 3. Export the Main Page wrapping the content in Suspense
+export default function VerifyPage() {
+  return (
     <div className={styles.container}>
-      <div className={styles.card}>
-        <Mail size={48} className={styles.icon} />
-        <h1 className={styles.title}>Check Your Email</h1>
-        <p className={styles.description}>
-          A verification link has been sent to <strong>{email}</strong>. <br />
-          Please check your inbox and click the link to activate your account.
-        </p>
-
-        {message && (
-          <p className={styles.message}>
-            <CheckCircle size={18} style={{ marginRight: 8 }} />
-            {message}
-          </p>
-        )}
-        {error && (
-          <p className={styles.error}>
-            <XCircle size={18} style={{ marginRight: 8 }} />
-            {error}
-          </p>
-        )}
-
-        <button
-          className={styles.button}
-          onClick={handleResend}
-          disabled={loading}
-        >
-          {loading ? (
-            <span className={styles.loadingState}>
-              <Loader2 className={styles.spinner} size={20} />
-              Resending...
-            </span>
-          ) : (
-            'Resend Verification Email'
-          )}
-        </button>
-
-        <p className={styles.footerText}>
-          {"Didn't receive the email? Click above to resend."}
-        </p>
-      </div>
+      <Suspense fallback={<VerifyFallback />}>
+        <VerifyContent />
+      </Suspense>
     </div>
   )
 }
