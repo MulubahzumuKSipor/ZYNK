@@ -1,0 +1,138 @@
+/* app/ui/components/orders/orders-table.module.css */
+
+.tableContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+:global(.dark) .tableContainer {
+  background-color: #1f2937;
+}
+
+.scrollWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header Styles */
+.thead {
+  background-color: #f9fafb;
+}
+
+:global(.dark) .thead {
+  background-color: #374151;
+}
+
+.th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+:global(.dark) .th {
+  color: #d1d5db;
+}
+
+/* Body Styles */
+.tbody {
+  background-color: white;
+}
+
+:global(.dark) .tbody {
+  background-color: transparent;
+}
+
+.tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+}
+
+:global(.dark) .tr {
+  border-color: #374151;
+}
+
+.tr:hover {
+  background-color: #f9fafb;
+}
+
+:global(.dark) .tr:hover {
+  background-color: #374151;
+}
+
+/* Selection State */
+.selectedRow {
+  background-color: #eff6ff !important;
+}
+
+:global(.dark) .selectedRow {
+  background-color: rgba(30, 58, 138, 0.2) !important;
+}
+
+.td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+/* Badge System */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Order Status Colors */
+.status_pending { background: #fef3c7; color: #92400e; }
+.status_processing { background: #dbeafe; color: #1e40af; }
+.status_shipped { background: #f3e8ff; color: #6b21a8; }
+.status_delivered { background: #dcfce7; color: #166534; }
+.status_cancelled { background: #fee2e2; color: #991b1b; }
+.status_refunded { background: #ffedd5; color: #9a3412; }
+.status_on_hold { background: #f3f4f6; color: #374151; }
+
+:global(.dark) .status_pending { background: #451a03; color: #fef3c7; }
+:global(.dark) .status_processing { background: #1e3a8a; color: #dbeafe; }
+
+/* Alert Labels */
+.lowStockAlert {
+  font-size: 0.75rem;
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Utility */
+.textMain { color: #111827; font-weight: 500; }
+:global(.dark) .textMain { color: white; }
+
+.textSub { color: #6b7280; font-size: 0.875rem; }
+:global(.dark) .textSub { color: #9ca3af; }
+
+.viewButton {
+  color: #2563eb;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.viewButton:hover {
+  text-decoration: underline;
+}
+
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}

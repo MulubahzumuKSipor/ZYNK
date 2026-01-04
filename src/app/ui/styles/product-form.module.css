@@ -1,0 +1,397 @@
+/* product-form.module.css */
+
+/* --- Form Grid Layout --- */
+.formGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  background-color: #f9fafb;
+}
+
+@media (max-width: 1024px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Columns --- */
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebarColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* --- Card --- */
+.card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Input Fields --- */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #374151;
+}
+
+.input,
+.select,
+.textarea,
+.inputSmall {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  /* width: 100%; */
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus,
+.inputSmall:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+/* --- Rows --- */
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- Error Messages --- */
+.errorMessage {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.errorText {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* --- Variants --- */
+.variantList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.variantRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.variantField,
+.variantFieldSmall {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputSmall {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.deleteIcon {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ef4444;
+  transition: color 0.2s ease;
+}
+
+.deleteIcon:hover {
+  color: #b91c1c;
+}
+
+.emptyText {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* --- Status Toggle --- */
+.statusToggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.statusButton {
+  flex: 1;
+  padding: 0.5rem 0;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #f9fafb;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.statusButton.active {
+  background-color: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.statusButton.draft {
+  background-color: #fbbf24;
+  color: #fff;
+  border-color: #fbbf24;
+}
+
+/* --- Images --- */
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  border-radius: 0.375rem;
+}
+
+.imageDelete {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* --- Upload Box --- */
+.uploadBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.uploadBox:hover {
+  border-color: #2563eb;
+  background-color: #f3f4f6;
+}
+
+.uploadText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* --- Action Buttons --- */
+.actionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.deleteButton {
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.primaryButton {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.primaryButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.secondaryButton:hover {
+  background-color: #e5e7eb;
+}
+
+.deleteButton {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.deleteButton:hover {
+  background-color: #b91c1c;
+}
+
+
+/* Media Card Container */
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Individual Image Wrapper */
+.imagePreview {
+  position: relative;
+  aspect-ratio: 1 / 1; /* Keeps images perfectly square */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.img {
+  object-fit: cover; /* Prevents stretching */
+  transition: transform 0.2s ease;
+}
+
+.imagePreview:hover .img {
+  transform: scale(1.05);
+}
+
+/* Remove Button (The X) */
+.removeImage {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #ef4444;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.removeImage:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+
+.newBadge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: #2563eb;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  z-index: 5;
+  letter-spacing: 0.025em;
+}
+
+/* Upload Placeholder Box */
+.uploadPlaceholder {
+  aspect-ratio: 1 / 1;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.uploadPlaceholder:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #f0f7ff;
+}
+
+/* Hide the native file input but keep it accessible */
+.uploadPlaceholder input[type="file"] {
+  display: none;
+}

@@ -1,0 +1,129 @@
+.container {
+    padding: 7rem 2rem 2rem 4rem;
+}
+
+/* Header */
+.header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.header p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Filters */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.filters input,
+.filters select {
+  padding: 0.55rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.85rem;
+}
+
+/* ===== TABLE (SCOPED) ===== */
+
+.tableWrapper {
+  overflow-x: auto;
+  display: none;
+}
+
+.tableWrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableWrapper thead {
+  background: #f6f6f6;
+}
+
+.tableWrapper th,
+.tableWrapper td {
+  padding: 0.75rem;
+  text-align: left;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* Badges */
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.paid {
+  background: #e6f7ee;
+  color: #157347;
+}
+
+.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.processing {
+  background: #e7f1ff;
+  color: #084298;
+}
+
+.shipped {
+  background: #ede7f6;
+  color: #4527a0;
+}
+
+/* ===== MOBILE CARDS ===== */
+
+.cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+/* Desktop breakpoint */
+@media (min-width: 768px) {
+  .tableWrapper {
+    display: block;
+  }
+
+  .cards {
+    display: none;
+  }
+}

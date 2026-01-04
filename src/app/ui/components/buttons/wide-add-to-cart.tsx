@@ -1,61 +1,76 @@
 'use client'
 
-import { useState } from "react"
-import { ShoppingCart } from "lucide-react"
-import { useCart } from "@/lib/cart-provider"
-import styles from "@/app/ui/styles/wide-add-to-cart.module.css"
+import { useState } from 'react'
+import { Check, Loader2, ShoppingBag } from 'lucide-react'
+import { useCart } from '@/lib/cart-provider'
+import styles from '@/app/ui/styles/add-to-cart.module.css'
 
-interface AddToCartWideButtonProps {
-  productVariantId: number
-  quantity?: number
-  fullWidth?: boolean 
+interface AddToCartButtonProps {
+  variantId: string
 }
 
-export default function AddToCartWideButton({
-  productVariantId,
-  quantity = 1,
-  fullWidth = true,
-}: AddToCartWideButtonProps) {
+export default function AddToCartButton({ variantId }: AddToCartButtonProps) {
   const { addToCart } = useCart()
-  const [isPending, setIsPending] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [done, setDone] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleAddToCart = async () => {
-    setIsPending(true)
-    setMessage(null)
+  const handleAdd = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+    e.preventDefault()
+
+    if (!variantId) {
+      setError('Please select a variant')
+      setTimeout(() => setError(null), 3000)
+      return
+    }
+
+    setLoading(true)
+    setError(null)
 
     try {
-      await addToCart(productVariantId, quantity)
-      setMessage("Added to cart!")
-    } catch (error) {
-      console.error(error)
-      setMessage("Error adding to cart.")
+      await addToCart(variantId, 1)
+      setDone(true)
+      setTimeout(() => setDone(false), 2000)
+    } catch (err) {
+      console.error('Error adding to cart:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add to cart'
+      setError(errorMessage)
+      setTimeout(() => setError(null), 3000)
     } finally {
-      setIsPending(false)
-      setTimeout(() => setMessage(null), 2500)
+      setLoading(false)
     }
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       <button
-        onClick={handleAddToCart}
-        disabled={isPending}
-        className={`${styles.button} ${fullWidth ? styles.fullWidthButton : ""}`}
+        onClick={handleAdd}
+        disabled={loading || !variantId}
+        className={styles.button}
+        type="button"
+        aria-label="Add to cart"
       >
-        {isPending ? "Adding..." : (
+        {loading ? (
           <>
-            <ShoppingCart size={20} className={styles.cartIcon} />
-            <span className={styles.buttonText}>Add to Cart</span>
+            <Loader2 className={styles.spinner} size={18} aria-hidden="true" />
+            <span>Adding...</span>
+          </>
+        ) : done ? (
+          <>
+            <Check size={18} aria-hidden="true" />
+            <span>Added!</span>
+          </>
+        ) : (
+          <>
+            <ShoppingBag size={18} aria-hidden="true" />
+            <span>Add to Cart</span>
           </>
         )}
       </button>
 
-      {message && (
-        <div
-          className={`${styles.message} ${message.startsWith("Error") ? styles.error : styles.success}`}
-        >
-          {message}
+      {error && (
+        <div className={styles.error} role="alert">
+          {error}
         </div>
       )}
     </div>

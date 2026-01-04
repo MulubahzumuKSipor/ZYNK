@@ -80,11 +80,15 @@ nav{
     #ffd600  /* Vibrant, modern yellow */
   );
   background-size: 400% 400%;
+  align-items: center;
   animation: gradientAnimation 15s ease infinite;
   position: fixed;
   z-index: 1000;
   width: 100%;
-  padding: 20px 0px;
+  padding: 10px 0px;
+  display: flex;
+  text-decoration: none;
+  justify-content: space-evenly;
 }
 
 .input{
@@ -200,4 +204,37 @@ nav{
   min-width: 18px;
   text-align: center;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
+
+/* Target the entire page */
+:root {
+  scrollbar-gutter: stable; /* Prevents layout jump when modals open */
+}
+
+/* Webkit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff; /* White track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000000; /* Black thumb */
+  border-radius: 20px;
+  /* Border creates "padding" around the thumb */
+  border: 3px solid #ffffff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2563eb; /* Turns Blue on hover */
+}
+
+/* Firefox Support */
+@supports (scrollbar-color: auto) {
+  html {
+    scrollbar-color: #000000 #ffffff;
+    scrollbar-width: thin;
+  }
 }

@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc; /* Light gray background for the app */
+  color: #1e293b;
+}
+
+/* Sidebar is fixed on the left */
+.sidebarWrapper {
+  width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  border-right: 1px solid #e2e8f0;
+  background: white;
+  z-index: 40;
+}
+
+/* The right side of the dashboard */
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevents flex children from overflowing */
+}
+
+/* Header stays at the top of the main area */
+.headerWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* The actual page content */
+.content {
+  flex: 1;
+  padding: 6rem 1rem;
+  max-width: 1400px;
+  /* width: 100%; */
+  /* margin: 0 auto; */
+}
+
+/* Responsive adjustment for tablets/mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebarWrapper {
+    display: none; /* Usually you'd swap this for a mobile hamburger menu */
+  }
+}

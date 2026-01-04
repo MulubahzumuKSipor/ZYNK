@@ -1,0 +1,43 @@
+/* components/ui/styles/card.module.css */
+
+/* Base card style */
+.card {
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+/* Light & Dark variants (inherited from theme container variables) */
+.light {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.dark {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Card title */
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Card value */
+.value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+/* Card subtitle */
+.subtitle {
+  font-size: 14px;
+  color: var(--placeholder-color);
+  font-style: italic;
+}

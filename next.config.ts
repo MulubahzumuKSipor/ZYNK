@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'cdn.dummyjson.com' },
       { protocol: 'https', hostname: 'drive.google.com' },
       { protocol: 'https', hostname: 'raw.githubusercontent.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com'},
+      {
+        protocol: 'https',
+        hostname: 'niiqfjlpggrcslhnfbcw.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 

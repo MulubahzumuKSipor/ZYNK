@@ -1,0 +1,78 @@
+.newsletterSection {
+  /* width: 100%; */
+  padding: 4rem 1.5rem;
+  background-color: #1e293b; /* Deep slate to complement dark footer */
+  color: #f1f5f9; /* Light text for readability */
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container h2 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+  color: #f1f5f9; /* Bright heading */
+}
+
+.container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cbd5f5; /* Slightly muted for subtext */
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.form input {
+  flex: 1;
+  min-width: 240px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  background-color: #334155; /* Lighter than section bg */
+  color: #f1f5f9;
+}
+
+.form input::placeholder {
+  color: #94a3b8;
+}
+
+.form button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  background-color: #3b82f6; /* Bright accent color */
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.form button:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.form button:active {
+  transform: translateY(0);
+}
+
+.note {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}

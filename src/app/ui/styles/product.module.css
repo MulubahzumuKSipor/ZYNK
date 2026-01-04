@@ -2,7 +2,7 @@
 
 /* --- Container & Grid --- */
 .container {
-  padding: 8rem 2rem 1rem;
+  padding: 6rem 2rem 1rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -34,6 +34,7 @@
 }
 
 .grid {
+  margin: 20px 0px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
@@ -69,6 +70,12 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background-color: #f9fafb;
+}
+
+.image{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .productImage {
@@ -217,6 +224,9 @@
 /* --- Centered messages (loading/error/empty) --- */
 .centerMessage {
   text-align: center;
+  /* height: 100vh; */
+  margin: 0 auto;
+  padding: 14rem 0;
   /* margin-top: 3rem; */
 }
 
@@ -244,4 +254,157 @@
     padding: 1rem 1rem;
   }
 
+}
+
+.header {
+  padding: 80px 20px;
+  text-align: center;
+  background: radial-gradient(circle at top, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titleWrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Subtle accent line under "Shop All" */
+.titleWrapper::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 20%;
+  right: 20%;
+  height: 4px;
+  background: #3b82f6; /* Your brand color */
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  max-width: 500px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 60px 20px;
+  }
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 30px 100px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.viewAll {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1ab26e;
+  text-decoration: none;
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
+/* Ensure the card looks consistent in smaller sections */
+.card {
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 4rem;
+  padding-bottom: 2rem;
+}
+
+.pageBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: #1ab26e;
+  color: #1ab26e;
+  background: #f0fdf4;
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.specialBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px; /* Placed on the right to differ from 'New' badge */
+  z-index: 10;
+  background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold theme */
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }

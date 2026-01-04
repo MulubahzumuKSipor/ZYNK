@@ -1,0 +1,177 @@
+/* app/ui/components/orders/order-details-modal.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 56rem; /* max-w-4xl */
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+:global(.dark) .modal {
+  background-color: #1f2937;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+:global(.dark) .header {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+:global(.dark) .headerTitle {
+  color: white;
+}
+
+.headerSubtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+/* Content Sections */
+.content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionBox {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+:global(.dark) .sectionBox {
+  border-color: #374151;
+}
+
+.statusBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+:global(.dark) .statusBanner {
+  background-color: #374151;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.value {
+  font-weight: 500;
+  color: #111827;
+}
+
+:global(.dark) .value {
+  color: white;
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.table td {
+  padding: 0.75rem 0;
+}
+
+/* Note Bubbles */
+.noteBubble {
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+:global(.dark) .noteBubble {
+  background-color: #374151;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.btnBlue { background-color: #2563eb; }
+.btnPurple { background-color: #9333ea; }
+.btnGreen { background-color: #16a34a; }
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pending { background: #fef3c7; color: #92400e; }
+.processing { background: #dbeafe; color: #1e40af; }
+.shipped { background: #f3e8ff; color: #6b21a8; }
+.delivered { background: #dcfce7; color: #166534; }
+.cancelled { background: #fee2e2; color: #991b1b; }

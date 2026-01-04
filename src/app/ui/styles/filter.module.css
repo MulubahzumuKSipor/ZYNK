@@ -1,0 +1,119 @@
+/* Container for all filters */
+.filtersContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-end;
+  font-family: Arial, sans-serif;
+}
+
+/* Each filter */
+.filterLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  font-weight: 500;
+  position: relative;
+  min-width: 120px;
+  flex: 1 1 150px; /* responsive: grow/shrink */
+}
+
+/* Inputs and selects */
+.filterLabel select,
+.filterLabel input {
+  margin-top: 0.25rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filterLabel select:hover,
+.filterLabel input:hover,
+.filterLabel select:focus,
+.filterLabel input:focus {
+  border-color: #1ab26e;
+}
+
+/* Individual clear button */
+.clearBtn {
+  position: absolute;
+  top: 0;
+  right: -0.6rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.clearBtn:hover {
+  color: #1ab26e;
+}
+
+/* Clear All button */
+.clearAllBtn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  background-color: #1ab26e;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  height: 36px;
+  align-self: flex-start;
+}
+
+.clearAllBtn:hover {
+  background-color: #139954;
+}
+
+/* Selected filters summary */
+.selectedFilters {
+  width: 100%;
+  font-size: 0.875rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* ===== Responsive ===== */
+
+/* Mobile: stack vertically */
+@media (max-width: 640px) {
+  .filtersContainer {
+    /* flex-direction: column; */
+    gap: 0.75rem;
+  }
+
+  .filterLabel {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .clearAllBtn {
+    align-self: stretch;
+  }
+}
+
+/* Tablet: wrap nicely */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .filtersContainer {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .filterLabel {
+    flex: 1 1 calc(50% - 1rem);
+  }
+
+  .clearAllBtn {
+    flex: 1 1 100%;
+    margin-top: 0.5rem;
+  }
+}

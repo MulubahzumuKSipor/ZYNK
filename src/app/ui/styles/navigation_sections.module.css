@@ -1,0 +1,213 @@
+/* Container & Global Spacing */
+.wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+/* --- CATEGORY SECTION (Top of page) --- */
+.categorySection {
+  padding: 40px 0;
+  margin: 0 60px;
+}
+
+.categoryGrid {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 10px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.categoryGrid::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.categoryCard {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  width: 100px;
+  transition: transform 0.2s ease;
+}
+
+.categoryCard span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+}
+
+.iconCircle {
+  width: 80px;
+  height: 80px;
+  background-color: #f1f5f9;
+  border-radius: 50%; /* Circular Story Style */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.categoryCard:hover .iconCircle {
+  border-color: #1ab26e;
+  background-color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(26, 178, 110, 0.2);
+}
+
+.categoryCard:hover span {
+  color: #0f172a;
+}
+/* ===============================
+   BASE (Desktop / Default)
+================================ */
+
+.brandSection {
+  padding: 2.5rem 0rem;
+  margin: 0 60px;
+}
+
+.brandHeading {
+  color: #0f172a;
+  letter-spacing: -.02em;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.brandFlex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.brandLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  width: 110px;
+}
+
+.logoWrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.brandName {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Fallback logo */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.visible {
+  display: flex;
+}
+
+/* ===============================
+   MOBILE VIEW
+================================ */
+
+@media (max-width: 768px) {
+
+  .brandSection {
+    margin: 0 20px;
+    padding: 1.25rem 0;
+  }
+
+  .brandHeading {
+    padding: 0 1rem;
+    font-size: 1.1rem;
+  }
+
+  .brandFlex {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 0 1rem 0.75rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .brandFlex::-webkit-scrollbar {
+    display: none;
+  }
+
+  .brandLogo {
+    flex: 0 0 auto;
+    width: 72px;
+    scroll-snap-align: start;
+  }
+
+  .logoWrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .brandName {
+    display: none; /* cleaner mobile look */
+  }
+}
+
+/* ===============================
+   VERY SMALL DEVICES
+================================ */
+
+@media (max-width: 420px) {
+  .logoWrapper {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+
+/* Handle Mobile */
+@media (max-width: 768px) {
+  .brandFlex {
+    gap: 30px;
+  }
+  
+  .brandLogo {
+    width: 100px;
+    height: 40px;
+  }
+
+  .iconCircle {
+    width: 70px;
+    height: 70px;
+  }
+  .categorySection{
+    margin: 0 30px;
+  }
+}

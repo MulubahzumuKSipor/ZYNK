@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google"; // Optimization: Use Google Fonts
 import "./globals.css";
-import Header from "../app/ui/components/shared/header";
-import Footer from "../app/ui/components/shared/footer";
 import { CartProvider } from "@/lib/cart-provider";
+import AuthManager from "./ui/components/auth-manager";
+import Header from "./ui/components/shared/header";
+import Footer from "./ui/components/shared/footer";
 
+// Load the Inter font
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ZYNK Ecommerce",
+  title: {
+    template: "%s | ZYNK Ecommerce", // "Home | ZYNK Ecommerce"
+    default: "ZYNK Ecommerce",       // Default title
+  },
   description:
-    "Shop variety of electronics directly from local stores on ZYNK. Get the freshest, highest quality products delivered to your door. Support local electronics today!",
+    "Shop variety of electronics directly from local stores on ZYNK. Get the freshest, highest quality products delivered to your door.",
 };
 
 export default function RootLayout({
@@ -17,12 +24,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    /* suppressHydrationWarning is MANDATORY here because
+      next-themes modifies the HTML attributes at runtime (adding class="dark").
+      Without this, you will get "Prop `class` did not match" errors.
+    */
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Fallback */}
+        {/* Fallback Icon */}
         <link rel="icon" href="/favicon.ico" />
 
-        {/* Favicons that switch with OS/browser theme */}
+        {/* Dynamic Theme Icons */}
         <link
           rel="icon"
           href="/favicon-light.ico"
@@ -34,7 +45,7 @@ export default function RootLayout({
           media="(prefers-color-scheme: dark)"
         />
 
-        {/* Optional: Change browser UI color for each theme (mobile browsers) */}
+        {/* Browser Theme Colors */}
         <meta
           name="theme-color"
           content="#ffffff"
@@ -47,8 +58,10 @@ export default function RootLayout({
         />
       </head>
 
-      <body>
+      {/* Apply the Font Class to Body */}
+      <body className={inter.className}>
         <CartProvider>
+          <AuthManager />
           <Header />
           {children}
           <Footer />

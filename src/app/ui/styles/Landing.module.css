@@ -1,7 +1,7 @@
 .heroWrapper {
   /* width: 100%; */
   background-color: #f8f9fa; /* Light grey/white background */
-  padding: 7% 4rem 0%;
+  padding: 10% 7rem 2%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,6 +116,7 @@
 
 /* --- Right Side: Image --- */
 .heroImageWrapper {
+  margin-top: -25%;
   position: relative;
   width: 100%;
   height: auto;
@@ -157,6 +158,8 @@
   .heroWrapper{
     padding: 30% 2rem 0%;
   }
+
+
   .heroContainer {
     grid-template-columns: 1fr;
     text-align: center;

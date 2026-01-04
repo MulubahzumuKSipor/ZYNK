@@ -9,10 +9,9 @@ import ProductSearch from "../product_search";
 export default function Header() {
     return(
         <div className="main_wrapper">
-            <div className={styles.header}>
-                <Link href={"/"}>
+                <Link href={"/"} className="link">
                 <div className={styles.logo}>
-                    <Image src="/bag-black.png" alt="NatFruit Ecommerce Logo" width={60} height={60} className="image"/>
+                    <Image src="/logo.webp" alt="NatFruit Ecommerce Logo" width={60} height={60} className="image"/>
                     <h1 className={styles.title}>ZYNK</h1>
                 </div>
                 </Link>
@@ -20,7 +19,7 @@ export default function Header() {
                 <div className={styles.nav_cart_wrapper}>
                     <Nav />
                 </div>
-            </div>
         </div>
     )
 }
+

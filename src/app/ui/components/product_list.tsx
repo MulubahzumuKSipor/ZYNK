@@ -1,106 +1,174 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ProductList from "../components/products";
-import { AlertCircle } from "lucide-react";
-import ProductSkeleton from "../skeletons/few_product_skeleton";
-import styles from "@/app/ui/styles/product.module.css";
+import { Loader2, AlertCircle } from "lucide-react";
+import { supabase } from "@/lib/client";
+import styles from "@/app/ui/styles/LandingProduct.module.css";
+import AddToCartButton from "@/app/ui/components/buttons/add-to-cart";
+import Image from "next/image";
+import Link from "next/link";
 
-export interface Product {
-  product_id?: number;
+// --- Interfaces for Type Safety ---
+interface ProductVariant {
+  id: string;
+  price: number;
+}
+
+interface ProductImage {
+  url: string;
+}
+
+// This interface matches exactly what Supabase returns
+interface SupabaseProductResponse {
+  id: string;
+  name: string;
+  slug: string;
+  brands: { name: string } | null;
+  categories: { name: string } | null;
+  product_images: ProductImage[] | null;
+  product_variants: ProductVariant[] | null;
+}
+
+interface ProductDisplay {
+  id: string;
+  variantId: string;
+  title: string;
+  slug: string;
+  brand: string;
+  category: string;
+  price: number;
+  image: string;
+}
+
+interface ProductGridProps {
+  limit?: number;
   title?: string;
-  brand?: string | null;
-  price?: number | string | null;
-  compare_at_price?: number | string | null;
-  images?: { image_url?: string | null }[] | null;
-  rating?: number | null;
-  stock_quantity?: number | null;
-  category_name?: string | null;
-  isNew?: boolean;
-  isTopRated?: boolean;
+  shuffle?: boolean;
+  className?: string; // <-- optional className for custom styling
 }
 
-interface ProductsGridProps {
-  limit?: number; // optional
-}
-
-// Fisher–Yates shuffle
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
-const ProductsGrid: React.FC<ProductsGridProps> = ({ limit }) => {
-  const [products, setProducts] = useState<Product[]>([]);
+export default function ProductGrid({
+  limit,
+  title,
+  shuffle = false,
+  className,
+}: ProductGridProps) {
+  const [products, setProducts] = useState<ProductDisplay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    async function fetchProducts() {
       try {
-        setError(null);
         setLoading(true);
+        setError(null);
 
-        const res = await fetch("/api/products", { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to fetch products: HTTP ${res.status}`);
+        const { data, error: sbError } = await supabase
+          .from("products")
+          .select(`
+            id,
+            name,
+            slug,
+            brands (name),
+            categories (name),
+            product_images (url),
+            product_variants (id, price)
+          `)
+          .returns<SupabaseProductResponse[]>();
 
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+        if (sbError) throw sbError;
+
+        if (data) {
+          let formatted: ProductDisplay[] = data.map((p: SupabaseProductResponse) => ({
+            id: p.id,
+            variantId: p.product_variants?.[0]?.id ?? "",
+            title: p.name,
+            slug: p.slug,
+            brand: p.brands?.name ?? "Brand",
+            category: p.categories?.name ?? "General",
+            price: p.product_variants?.[0]?.price ?? 0,
+            image: p.product_images?.[0]?.url ?? "/placeholder-product.png",
+          }));
+
+          if (shuffle) {
+            formatted = [...formatted].sort(() => Math.random() - 0.5);
+          }
+
+          if (limit) {
+            formatted = formatted.slice(0, limit);
+          }
+
+          setProducts(formatted);
+        }
       } catch (err) {
-        console.error(err);
-        setError("Could not load products. Please try again later.");
+        console.error("Fetch error:", err);
+        setError("Failed to load products");
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     fetchProducts();
-  }, []);
+  }, [limit, shuffle]);
 
   if (loading)
     return (
-      <ProductSkeleton />
+      <div className={styles.loaderContainer}>
+        <Loader2 className="animate-spin" size={30} stroke="#1ab26e" />
+      </div>
     );
 
   if (error)
     return (
-      <div className={styles.centerMessage}>
-        <AlertCircle size={48} color="#ef4444" />
-        <p className={styles.errorText}>{error}</p>
-      </div>
-    );
-
-  // Shuffle products and slice if limit is provided
-  const displayedProducts = limit ? shuffleArray(products).slice(0, limit) : products;
-
-  if (!displayedProducts.length)
-    return (
-      <div className={styles.centerMessage}>
-        <p>No products available.</p>
+      <div className={styles.loaderContainer}>
+        <AlertCircle size={30} color="#ef4444" />
+        <p>{error}</p>
       </div>
     );
 
   return (
-    <div
-      className={`${styles.container} ${limit ? styles.limitContainer : ""}`}
-    >
-      {/* Show heading only if limit is provided */}
-      {limit && <h2 className={styles.heading}>Recommended Products</h2>}
+    <section className={`${limit ? styles.limitedSection : styles.fullSection} ${className ?? ""}`}>
+      {title && (
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>{title}</h2>
+          {limit && (
+            <Link href="/shop" className={styles.viewAll}>
+              View All →
+            </Link>
+          )}
+        </div>
+      )}
 
-      <div className={styles.grid}>
-        {displayedProducts.map((product) => (
-          <ProductList
-            key={product.product_id ?? `${product.title}-${Math.random().toString(36).slice(2, 9)}`}
-            product={product}
-          />
+      {/* Use the provided className if available, otherwise fallback to default grid */}
+      <div className={className ? className : styles.grid}>
+        {products.map((product) => (
+          <div key={product.id} className={styles.card}>
+            <Link href={`/shop/${product.id}`} className={styles.imageLink}>
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  className={styles.image}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+            </Link>
+
+            <div className={styles.content}>
+              <div className={styles.meta}>
+                <span className={styles.brand}>{product.brand}</span>
+              </div>
+              <h3 className={styles.productTitle}>{product.title}</h3>
+
+              <div className={styles.footer}>
+                <span className={styles.price}>${product.price.toFixed(2)}</span>
+                <AddToCartButton variantId={product.variantId} />
+              </div>
+            </div>
+          </div>
         ))}
       </div>
-    </div>
+    </section>
   );
-};
-
-export default ProductsGrid;
+}

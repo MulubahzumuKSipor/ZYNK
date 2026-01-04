@@ -1,0 +1,46 @@
+
+body{
+  margin: 0;
+  padding: 0;
+  /* padding-top: 92px; */
+  box-sizing: border-box;
+}
+
+/* Logo needs to be align in the center */
+.logo{
+  align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.link{
+  text-decoration: none;
+}
+
+nav{
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+
+
+
+/* app/globals.css or a dashboard-specific css file */
+
+.dashboard-dark {
+  --bg-primary: #212529;
+  --bg-secondary: #343a40;
+  --text-main: #f8f9fa;
+  --border-color: #495057;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+}
+
+.dashboard-light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-main: #212529;
+  --border-color: #dee2e6;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+}

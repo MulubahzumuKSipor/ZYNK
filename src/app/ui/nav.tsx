@@ -1,279 +1,346 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useRef, Suspense } from 'react'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
-import CartButton from './components/buttons/cart'
-import styles from '../ui/styles/navbar.module.css'
 import { supabase } from '@/lib/client'
+import { useCart } from '@/lib/cart-provider'
+import ProductGrid from './components/product_list'
+import {
+  ChevronDown, User as UserIcon, LogOut, Settings,
+  Package, Menu, X, Sparkles, Flame, Info, HelpCircle,
+  ChevronLeft, ChevronRight
+} from 'lucide-react'
+import CartButton from './components/buttons/cart'
+import CartDrawer from './components/buttons/mini-cart'
+import styles from '../ui/styles/navbar.module.css'
 
 interface DbUser {
-  username: string
+  full_name: string | null
   email: string
   role: string
-  status: string
 }
 
-export default function Nav() {
+function NavContent() {
   const router = useRouter()
-  const navRef = useRef<HTMLElement | null>(null)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
+  const navRef = useRef<HTMLDivElement | null>(null)
+  const { items, openCart } = useCart()
+
+  // Carousel
+  const carouselRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
+
+  const scrollCarousel = (direction: number) => {
+    if (carouselRef.current) {
+      const firstChild = carouselRef.current.firstChild as HTMLElement | null;
+      const cardWidth = firstChild?.clientWidth ?? 140;
+      carouselRef.current.scrollBy({
+        left: direction * (cardWidth + 12), // 12 = gap
+        behavior: "smooth",
+      });
+    }
+  };
+
+
+  const checkScroll = () => {
+    if (!carouselRef.current) return
+    setCanScrollLeft(carouselRef.current.scrollLeft > 0)
+    setCanScrollRight(
+      carouselRef.current.scrollLeft + carouselRef.current.clientWidth <
+        carouselRef.current.scrollWidth
+    )
+  }
+
+  useEffect(() => {
+    const el = carouselRef.current
+    el?.addEventListener('scroll', checkScroll)
+    checkScroll()
+    return () => el?.removeEventListener('scroll', checkScroll)
+  }, [])
+
+  // Drawer and menu state
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [supabaseUser, setSupabaseUser] = useState<User | null>(null)
   const [dbUser, setDbUser] = useState<DbUser | null>(null)
 
-  const toggleMenu = (menuName: string) => setOpenMenu(prev => (prev === menuName ? null : menuName))
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(prev => !prev)
-    setOpenMenu(null)
-  }
+  const cartCount = items.reduce((acc, item) => acc + item.quantity, 0)
 
-  const handleNavClick = (href?: string) => {
+  /* ---------------- AUTH LOGIC ---------------- */
+  useEffect(() => {
+    const fetchProfile = async (userId: string) => {
+      const { data } = await supabase
+        .from('users')
+        .select('full_name, role')
+        .eq('id', userId)
+        .single()
+      if (data) setDbUser({ full_name: data.full_name, role: data.role, email: '' })
+    }
+
+    const initAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        setSupabaseUser(session.user)
+        fetchProfile(session.user.id)
+      }
+    }
+
+    initAuth()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSupabaseUser(session?.user ?? null)
+      if (session?.user) fetchProfile(session.user.id)
+      else setDbUser(null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  /* ---------------- HELPERS ---------------- */
+  const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false)
     setOpenMenu(null)
-    if (href) router.push(href)
+    router.push(href)
   }
+
+  const toggleAccordion = (menu: string) => setOpenMenu(openMenu === menu ? null : menu)
 
   const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut()
-    } catch (err) {
-      console.error('[Nav] signOut error', err)
-    }
-    setSupabaseUser(null)
-    setDbUser(null)
-    handleNavClick('/auth/login')
+    await supabase.auth.signOut()
+    setOpenMenu(null)
+    setIsMobileMenuOpen(false)
+    router.refresh()
+    router.push('/')
   }
 
-  // --- Supabase Auth Listeners ---
-  useEffect(() => {
-    let mounted = true
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return
-      if (data.session?.user) setSupabaseUser(data.session.user)
-    }).catch(err => {
-      console.debug('[Nav] getSession error', err)
-    })
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) return
-      setSupabaseUser(session?.user ?? null)
-    })
-
-    return () => {
-      mounted = false
-      listener.subscription.unsubscribe()
-    }
-  }, [])
-
-  // --- Fetch DB User ---
-  useEffect(() => {
-    const controller = new AbortController()
-    let mounted = true
-
-    const fetchDbUser = async () => {
-      if (!supabaseUser?.id) {
-        if (mounted) setDbUser(null)
-        return
-      }
-
-      try {
-        const { data: sessionData } = await supabase.auth.getSession()
-        const accessToken = sessionData.session?.access_token ?? null
-
-        const res = await fetch(`/api/users/${supabaseUser.id}`, {
-          method: 'GET',
-          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-          signal: controller.signal,
-        })
-
-        if (!mounted) return
-
-        if (!res.ok) {
-          setDbUser(null)
-          return
-        }
-
-        const data = await res.json()
-        setDbUser(data.user ?? null)
-      } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return
-        console.error('[Nav] Error fetching user', err)
-        if (mounted) setDbUser(null)
-      }
-    }
-
-    fetchDbUser()
-
-    return () => {
-      mounted = false
-      controller.abort()
-    }
-  }, [supabaseUser])
-
-  // --- Click Outside / Escape to Close ---
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setOpenMenu(null)
-        setIsMobileMenuOpen(false)
-      }
-    }
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpenMenu(null)
-        setIsMobileMenuOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleEscapeKey)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscapeKey)
-    }
-  }, [])
+  const displayName = (
+    dbUser?.full_name || supabaseUser?.email?.split('@')[0] || 'Account'
+  ).toUpperCase()
 
   return (
-    <nav className={styles.navbar} ref={navRef}>
-      {/* Hamburger Icon */}
-      <button
-        className={styles.hamburger}
-        onClick={toggleMobileMenu}
-        aria-expanded={isMobileMenuOpen}
-        aria-label="Toggle navigation"
-      >
-        {isMobileMenuOpen ? (
-          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        )}
-      </button>
+    <>
+      <CartDrawer />
 
-      {/* Main Nav List */}
-      <ul className={`${styles.navList} ${isMobileMenuOpen ? styles.open : ''}`}>
+      <div className={styles.navWrapper} ref={navRef}>
+        {/* --- MOBILE HAMBURGER --- */}
+        <button
+          className={styles.mobileToggle}
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open Menu"
+        >
+          <Menu size={24} />
+        </button>
 
-        {/* Home */}
-        <li className={`${styles.navItem} ${styles.mobileOnly}`}>
-          <button className={styles.link} onClick={() => handleNavClick('/')}>Home</button>
-        </li>
-
-        {/* SHOP DROPDOWN */}
-        <li className={styles.navItem}>
-          <button
-            aria-haspopup="true"
-            aria-expanded={openMenu === 'shop'}
-            onClick={() => toggleMenu('shop')}
-            className={styles.navButton}
-          >
-            Shop
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: openMenu === 'shop' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <div className={`${styles.megaMenu} ${openMenu === 'shop' ? styles.visible : ''}`}>
-            <div className={styles.megaMenuColumn}>
-              <h3>Categories</h3>
-              <ul>
-                <li><button onClick={() => handleNavClick('/shop')}>All Products</button></li>
-                <li><button onClick={() => handleNavClick('/specials')}>Specials</button></li>
-                <li><button onClick={() => handleNavClick('/arrivals')}>New Arrivals</button></li>
-              </ul>
-            </div>
-            <div className={styles.megaMenuColumn}>
-              <h3>Featured</h3>
-              <ul>
-                <li><button onClick={() => handleNavClick('/bestsellers')}>Best Sellers</button></li>
-                <li><button onClick={() => handleNavClick('/sale')} style={{color: '#ef4444'}}>Hot Sale 🔥</button></li>
-              </ul>
-            </div>
-          </div>
-        </li>
-
-        {/* ABOUT DROPDOWN */}
-        <li className={styles.navItem}>
-          <button
-            aria-haspopup="true"
-            aria-expanded={openMenu === 'about'}
-            onClick={() => toggleMenu('about')}
-            className={styles.navButton}
-          >
-            About
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: openMenu === 'about' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <div className={`${styles.megaMenu} ${openMenu === 'about' ? styles.visible : ''}`}>
-            <div className={styles.megaMenuColumn}>
-              <h3>Company</h3>
-              <ul>
-                <li><button onClick={() => handleNavClick('/about')}>Our Story</button></li>
-                <li><button onClick={() => handleNavClick('/careers')}>Careers</button></li>
-              </ul>
-            </div>
-            <div className={styles.megaMenuColumn}>
-              <h3>Support</h3>
-              <ul>
-                <li><button onClick={() => handleNavClick('/contact')}>Contact Us</button></li>
-                <li><button onClick={() => handleNavClick('/faq')}>FAQ</button></li>
-              </ul>
-            </div>
-          </div>
-        </li>
-
-        {/* AUTH SECTION */}
-        {dbUser ? (
+        {/* --- DESKTOP NAVIGATION --- */}
+        <ul className={styles.desktopLinks}>
           <li className={styles.navItem}>
             <button
-              aria-haspopup="true"
-              aria-expanded={openMenu === 'account'}
-              onClick={() => toggleMenu('account')}
-              className={styles.navButton}
+              className={`${styles.navButton} ${pathname === '/' ? styles.active : ''}`}
+              onClick={() => handleNavClick('/')}
             >
-              <span style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {dbUser.username || 'Account'}
-              </span>
+              Home
             </button>
+          </li>
 
-            <div className={`${styles.megaMenu} ${styles.miniMenu} ${openMenu === 'account' ? styles.visible : ''}`}>
-              <div className={styles.megaMenuColumn}>
-                <ul>
-                  <li><button onClick={() => handleNavClick('/account/manage')}>Manage Account</button></li>
-                  <li><button onClick={() => handleNavClick('/account/orders')}>My Orders</button></li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        color: '#ef4444',
-                        textAlign: 'left',
-                        background: 'none',
-                        border: 'none',
-                        padding: '4px 0',
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                        fontSize: '0.95rem'
-                      }}
-                    >
-                      Log Out
-                    </button>
-                  </li>
-                </ul>
+          {/* SHOP MEGA MENU */}
+          <li
+            className={styles.navItem}
+            onMouseEnter={() => setOpenMenu('shop')}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className={`${styles.navButton} ${openMenu === 'shop' ? styles.active : ''}`}>
+              Shop <ChevronDown size={14} className={styles.chevron} />
+            </button>
+            <div className={`${styles.megaMenu} ${openMenu === 'shop' ? styles.show : ''}`}>
+              <div className={styles.megaGrid}>
+                <div className={styles.megaColumn}>
+                  <h4><Sparkles size={12}/> Categories</h4>
+                  <button onClick={() => handleNavClick('/shop')}>All Products</button>
+                  <button onClick={() => handleNavClick('/specials')}>Specials</button>
+                  <button onClick={() => handleNavClick('/arrivals')}>New Arrivals</button>
+                </div>
+                <div className={styles.megaColumn}>
+                  <h4><Flame size={12}/> Featured</h4>
+                  <button onClick={() => handleNavClick('/bestsellers')}>Best Sellers</button>
+                  <button onClick={() => handleNavClick('/sale')} className={styles.hotSale}>Hot Sale 🔥</button>
+                </div>
               </div>
             </div>
           </li>
-        ) : (
-          <>
-            <li className={styles.navItem}><button onClick={() => handleNavClick('/auth/login')}>Login</button></li>
-            <li className={styles.navItem}><button onClick={() => handleNavClick('/auth/register')} style={{ backgroundColor: 'blue', color: 'white', padding: '8px 20px', boxShadow: '0 4px 14px rgba(13,71,161,0.39)', borderRadius: '10px' }}>Register</button></li>
-          </>
-        )}
 
-        {/* CART */}
-        <li className={styles.navItem}>
+          {/* ABOUT MEGA MENU */}
+          <li
+            className={styles.navItem}
+            onMouseEnter={() => setOpenMenu('about')}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className={`${styles.navButton} ${openMenu === 'about' ? styles.active : ''}`}>
+              About <ChevronDown size={14} className={styles.chevron} />
+            </button>
+            <div className={`${styles.megaMenu} ${openMenu === 'about' ? styles.show : ''}`}>
+              <div className={styles.megaGrid}>
+                <div className={styles.megaColumn}>
+                  <h4><Info size={12}/> Company</h4>
+                  <button onClick={() => handleNavClick('/about')}>Our Story</button>
+                  <button onClick={() => handleNavClick('/careers')}>Careers</button>
+                </div>
+                <div className={styles.megaColumn}>
+                  <h4><HelpCircle size={12}/> Support</h4>
+                  <button onClick={() => handleNavClick('/contact')}>Contact Us</button>
+                  <button onClick={() => handleNavClick('/faq')}>FAQ</button>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          {dbUser?.role === 'admin' && (
+            <li className={styles.navItem}>
+              <button className={styles.adminBadge} onClick={() => handleNavClick('/dashboard/home')}>Admin</button>
+            </li>
+          )}
+        </ul>
+
+        {/* --- SHARED ACTIONS --- */}
+        <div className={styles.navActions}>
+          {supabaseUser && !supabaseUser.is_anonymous ? (
+            <div className={styles.accountContainer}>
+              <button
+                className={styles.accountBtn}
+                onClick={() => setOpenMenu(openMenu === 'account' ? null : 'account')}
+              >
+                <span className={styles.userLabel}>{displayName}</span>
+                <UserIcon size={18} />
+              </button>
+              {openMenu === 'account' && (
+                <div className={styles.userDropdown}>
+                  <div className={styles.dropdownHeader}>
+                    <p>{displayName}</p>
+                    <span>{supabaseUser.email}</span>
+                  </div>
+                  <button onClick={() => handleNavClick('/account/orders')}><Package size={14}/> Orders</button>
+                  <button onClick={() => handleNavClick('/account/manage')}><Settings size={14}/> Settings</button>
+                  <hr />
+                  <button onClick={handleLogout} className={styles.logoutBtn}><LogOut size={14}/> Log Out</button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className={styles.authGroup}>
+              <button className={styles.loginBtn} onClick={() => handleNavClick('?auth=login')}>Login</button>
+              <button className={styles.joinBtn} onClick={() => handleNavClick('?auth=register')}>Join</button>
+            </div>
+          )}
           <CartButton />
-        </li>
-      </ul>
-    </nav>
+        </div>
+
+        {/* --- MOBILE DRAWER --- */}
+        <div className={`${styles.mobileDrawer} ${isMobileMenuOpen ? styles.drawerOpen : ''}`}>
+          {/* Drawer Header */}
+          <div className={styles.drawerHeader}>
+            <span className={styles.drawerLogo}>ZYNK<span>.</span></span>
+            <button className={styles.drawerCloseBtn} onClick={() => setIsMobileMenuOpen(false)}>
+              <X size={24} />
+            </button>
+          </div>
+
+          {/* Drawer Content */}
+          <div className={styles.drawerContent}>
+            <button className={styles.mobileLink} onClick={() => handleNavClick('/')}>Home</button>
+
+            {/* SHOP ACCORDION */}
+            <div className={styles.mobileAccordion}>
+              <button onClick={() => toggleAccordion('mobileShop')}>
+                Shop <ChevronDown size={16} className={openMenu === 'mobileShop' ? styles.rotate : ''} />
+              </button>
+              <div className={`${styles.accContent} ${openMenu === 'mobileShop' ? styles.accShow : ''}`}>
+                <button onClick={() => handleNavClick('/shop')}>All Products</button>
+                <button onClick={() => handleNavClick('/specials')}>Specials</button>
+                <button onClick={() => handleNavClick('/arrivals')}>New Arrivals</button>
+                <button onClick={() => handleNavClick('/bestsellers')}>Best Sellers</button>
+                <button onClick={() => handleNavClick('/sale')}>Sale 🔥</button>
+              </div>
+            </div>
+
+            {/* ABOUT ACCORDION */}
+            <div className={styles.mobileAccordion}>
+              <button onClick={() => toggleAccordion('mobileAbout')}>
+                About <ChevronDown size={16} className={openMenu === 'mobileAbout' ? styles.rotate : ''} />
+              </button>
+              <div className={`${styles.accContent} ${openMenu === 'mobileAbout' ? styles.accShow : ''}`}>
+                <button onClick={() => handleNavClick('/about')}>Our Story</button>
+                <button onClick={() => handleNavClick('/careers')}>Careers</button>
+                <button onClick={() => handleNavClick('/contact')}>Contact Us</button>
+                <button onClick={() => handleNavClick('/faq')}>FAQ</button>
+              </div>
+            </div>
+
+            {/* Recommended Carousel */}
+            <div className={styles.drawerProductGridWrapper}>
+              <h4 className={styles.drawerCarouselTitle}>Recommended</h4>
+
+              {canScrollLeft && (
+                <button
+                  className={`${styles.drawerArrow} ${styles.drawerArrowLeft}`}
+                  onClick={() => scrollCarousel(-1)}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              )}
+
+              {canScrollRight && (
+                <button
+                  className={`${styles.drawerArrow} ${styles.drawerArrowRight}`}
+                  onClick={() => scrollCarousel(1)}
+                >
+                  <ChevronRight size={16} />
+                </button>
+              )}
+
+              <div ref={carouselRef} className={styles.drawerProductGrid}>
+                <ProductGrid limit={4} shuffle={true} className={styles.drawerProductGrid} />
+              </div>
+            </div>
+
+            {/* Authenticated Options */}
+            {supabaseUser && !supabaseUser.is_anonymous && (
+              <div className={styles.mobileAuthGroup}>
+                <span className={styles.authLabel}>My Account</span>
+                <span className={styles.authEmail}>{supabaseUser.email}</span>
+                <button className={styles.mobileAuthBtn} onClick={() => handleNavClick('/account/orders')}>
+                  <Package size={14} /> Orders
+                </button>
+                <button className={styles.mobileAuthBtn} onClick={() => handleNavClick('/account/manage')}>
+                  <Settings size={14} /> Settings
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Drawer Footer */}
+          <div className={styles.drawerFooter}>
+            {supabaseUser && !supabaseUser.is_anonymous ? (
+              <button className={styles.mobileLogout} onClick={handleLogout}>Log Out</button>
+            ) : (
+              <div className={styles.footer}>
+                <button className={styles.mobileJoin} onClick={() => handleNavClick('?auth=register')}>Create Account</button>
+                <button className={styles.mobileJoin} onClick={() => handleNavClick('?auth=login')}>Log In</button>
+              </div>
+
+            )}
+          </div>
+        </div>
+
+        {/* Backdrop */}
+        {isMobileMenuOpen && <div className={styles.backdrop} onClick={() => setIsMobileMenuOpen(false)} />}
+      </div>
+    </>
   )
+}
+
+export default function Nav() {
+  return <Suspense><NavContent /></Suspense>
 }

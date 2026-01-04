@@ -1,0 +1,38 @@
+/* components/ui/TimeRangeSelector.module.css */
+
+.selectorContainer {
+  display: flex;
+  background-color: #e9ecef; /* Light gray background for the group */
+  border-radius: 8px;
+  padding: 4px;
+  user-select: none;
+}
+
+.rangeButton {
+  background: none;
+  border: none;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: #495057;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  margin: 0 1px; /* Small gap between buttons */
+}
+
+.rangeButton:hover:not(.active) {
+  background-color: #dee2e6; /* Hover state for inactive buttons */
+}
+
+.active {
+  background-color: #007bff; /* Primary brand blue */
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle active elevation */
+  font-weight: 600;
+}
+
+.rangeButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Focus ring for accessibility */
+}

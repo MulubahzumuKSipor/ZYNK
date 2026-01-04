@@ -1,10 +1,12 @@
+export interface ReviewProfile {
+  display_name: string | null
+}
 
-
-// Interface for the objects in the 'reviews' array
 export interface Review {
-  rating: number;
-  comment: string;
-  date: string; // Or 'Date' if you plan to parse it
-  reviewerName: string;
-  reviewerEmail: string;
+  id: string
+  rating: number
+  review_text: string
+  is_verified_purchase: boolean
+  users: ReviewProfile | null // Ensure this matches in both places
+  created_at: string
 }

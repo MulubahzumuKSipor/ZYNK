@@ -1,0 +1,183 @@
+/* components/dashboard/DashHeader.module.css */
+
+/* --- Base Header Container (Dark Gray Aesthetic) --- */
+.headerContainer {
+    position: fixed;
+    z-index: 999;
+    width: 95%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    height: 60px;
+    border-bottom: 1px solid var(--dashboard-border-color);
+    transition: all 0.3s ease;
+}
+
+/* --- Theme Variables --- */
+/* Fallback/Light Theme */
+.lightTheme {
+    background-color: #ffffff;
+    color: #343a40;
+    --dashboard-text-color: #212529;
+    --dashboard-border-color: #e9ecef;
+    --dashboard-icon-color: #6c757d;
+    --dashboard-accent-bg: #f8f9fa;
+}
+
+/* Dark Theme */
+.darkTheme {
+    background-color: #212529; /* Deep, modern dark gray */
+    color: #f8f9fa;
+    --dashboard-text-color: #f8f9fa;
+    --dashboard-border-color: #343a40;
+    --dashboard-icon-color: #adb5bd;
+    --dashboard-accent-bg: #343a40;
+}
+
+/* --- Logo Section --- */
+.logoLink {
+    text-decoration: none;
+    /* Reset Link styles if necessary */
+    color: inherit;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.image {
+    width: 50px; /* Smaller logo size for dashboard */
+    height: 50px;
+    border-radius: 4px; /* Slight rounding */
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dashboard-text-color);
+    margin: 0;
+}
+
+/* --- Actions and Profile Section --- */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- Theme Toggle Switch --- */
+.themeToggle {
+    background: var(--dashboard-accent-bg);
+    color: var(--dashboard-icon-color);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.themeToggle:hover {
+    background-color: #495057; /* Slightly lighter on hover */
+    color: #ffffff;
+}
+
+.themeToggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- Profile Section --- */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 15px;
+    border-left: 1px solid var(--dashboard-border-color); /* Separator */
+}
+
+.profileName {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dashboard-text-color);
+    white-space: nowrap;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--dashboard-accent-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--dashboard-icon-color);
+}
+
+.avatarImage {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Theme Toggle Switch (Slider Style) --- */
+.themeSwitch {
+  position: relative;
+  width: 64px;
+  height: 32px;
+}
+
+.themeSwitch input {
+  display: none;
+}
+
+.switchTrack {
+  position: absolute;
+  inset: 0;
+  background-color: var(--dashboard-accent-bg);
+  border-radius: 999px;
+  border: 1px solid var(--dashboard-border-color);
+  transition: background-color 0.25s ease;
+  cursor: pointer;
+}
+
+.switchHandle {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59f00; /* sun default */
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+/* Checked (Dark Mode ON) */
+.themeSwitch input:checked + .switchTrack {
+  background-color: #343a40;
+}
+
+.themeSwitch input:checked + .switchTrack .switchHandle {
+  transform: translateX(32px);
+  color: #adb5bd; /* moon color */
+}
+
+/* Icon sizing */
+.switchHandle svg {
+  width: 16px;
+  height: 16px;
+}

@@ -1,62 +1,45 @@
-import { Review } from "./review";
-import { Meta } from "./metadata";
-import { Dimensions } from "./dimensions";
 
-
-// Individual product variant
-export interface ProductVariant {
-  id: number;           // DB id of the variant
-  sku: string;          // Unique per variant
-  price: number;        // Required
-  compareAtPrice?: number; // Optional
-  stock_quantity: number;        // Available quantity
-}
-
-// Image for a product
-export interface ProductImage {
-  id?: number;          // optional DB id
-  image_url: string;
-  alt_text?: string;
-  display_order?: number;
-  thumbnail_url?: string;
-}
-
-// Product category
-export interface ProductCategory {
-  id: number;
-  name: string;
-  description?: string;
-  parent_id?: number | null;
-}
-
-// Main Product interface
 export interface Product {
+  id: string;
   name: string;
-  product_id: number;         // DB id
-  external_id: number;
-  sku: string;
-  stock_quantity: number;
-  price: number;
-  title: string;
   description: string;
-  brand?: string;
-  weight?: number;
-  dimensions?: Dimensions;
-  warrantyInformation?: string;
-  shippingInformation?: string;
-  availabilityStatus?: string;
-  returnPolicy?: string;
-  minimumOrderQuantity?: number;
-  rating?: number;
-  tags?: string[];
-  meta?: Meta;
-
-  // Related data
-  variants: ProductVariant[];
-  images: ProductImage[];
-  categories?: ProductCategory[];
-  reviews?: Review[];
-  isTopRated?: boolean;
+  slug: string;
+  brands: { name: string } | null;
+  product_images: { url: string; is_primary: boolean }[];
+  product_variants: {
+    id: string;
+    sku: string;
+    price: number;
+    stock_quantity: number
+  }[];
+  reviews: {
+    id: string;
+    rating: number;
+    review_text: string;
+    is_verified_purchase: boolean;
+    users: { email: string } | null;
+  }[];
 }
+import { z } from 'zod';
 
+export const VariantSchema = z.object({
+  id: z.string().optional(),
+  sku: z.string().min(3, "SKU must be at least 3 characters"),
+  price: z.number().min(0.01, "Price must be greater than 0"),
+  stock_quantity: z.number().int().min(0),
+});
 
+export const ProductSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, "Name is required"),
+  brand: z.string().min(1, "Brand name is required").optional().or(z.literal('')), // Allows optional or empty string
+  slug: z.string().min(2, "Slug is required"),
+  category_id: z.string().uuid("Please select a valid category"),
+  description: z.string().optional(),
+  is_active: z.boolean().optional(),
+  images: z.array(z.string().url()),
+  variants: z.array(VariantSchema).min(1, "At least one variant is required"),
+});
+
+export type ProductFormData = z.infer<typeof ProductSchema>;
+export type Variant = z.infer<typeof VariantSchema>;
