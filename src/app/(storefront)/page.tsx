@@ -14,6 +14,7 @@ export default function Home() {
       <CategoryList/>
       {/* <TopRatedProducts limit={5} />
       <NewArrivalsList limit={8} title="🔥 Top 8 Latest Items"/> */}
+      <ProductGrid limit={6} title="Buy Now, Thank me later" shuffle={true} />
       <NewsletterSection />
     </>
   );

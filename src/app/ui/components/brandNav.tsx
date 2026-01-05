@@ -22,11 +22,7 @@ export default function BrandNavigation({ brands }: BrandNavigationProps) {
           const logoUrl = `https://img.logo.dev/${domain}?token=${TOKEN}&size=128`;
 
           return (
-            <Link
-              key={brand.id}
-              href={`/brand/${brand.slug}`}
-              className={styles.brandLogo}
-            >
+            <div key={brand.id} className={styles.brandCard}>
               <div className={styles.logoWrapper}>
                 <Image
                   src={logoUrl}
@@ -36,17 +32,17 @@ export default function BrandNavigation({ brands }: BrandNavigationProps) {
                   style={{ objectFit: "contain", padding: "10px" }}
                   onError={(e) => {
                     const img = e.currentTarget as HTMLImageElement;
-                    img.style.display = "none"; // hide broken image
+                    img.style.display = "none";
                     const fallback = img.parentElement?.querySelector(
                       `.${styles.fallback}`
                     ) as HTMLDivElement;
                     fallback?.classList.add(styles.visible);
                   }}
                 />
-                <div className={`${styles.fallback}`}>{brand.name.charAt(0)}</div>
+                <div className={styles.fallback}>{brand.name.charAt(0)}</div>
               </div>
               <span className={styles.brandName}>{brand.name}</span>
-            </Link>
+            </div>
           );
         })}
       </div>
