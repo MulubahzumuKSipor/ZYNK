@@ -105,16 +105,15 @@ export default function Footer() {
             <SocialIcon href="https://www.facebook.com/" src="/facebook.svg" alt="Facebook" />
             <SocialIcon href="https://www.instagram.com/" src="/instagram.svg" alt="Instagram" />
             <SocialIcon href="https://www.pinterest.com/" src="/pinterest.svg" alt="Pinterest" />
-            <SocialIcon href="https://twitter.com/" src="/twitter.svg" alt="Twitter" />
+            <SocialIcon href="https://twitter.com/" src="/x.svg" alt="Twitter" />
           </div>
 
           {/* Payment Methods */}
           <div className={styles.paymentMethods}>
             <Image width={35} height={20} src="/visa.svg" alt="Visa" />
             <Image width={35} height={20} src="/mastercard.svg" alt="Mastercard" />
-            <Image width={35} height={20} src="/paypal.svg" alt="PayPal" />
-            <Image width={35} height={20} src="/amex.svg" alt="American Express" />
-            <Image width={35} height={20} src="/applepay.svg" alt="Apple Pay" />
+            <Image width={35} height={20} src="/mtn.svg" alt="Mobile Money" />
+            <Image width={35} height={35} src="/orange.webp" alt="Orange Money" />
           </div>
 
           {/* Copyright */}
