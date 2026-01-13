@@ -47,8 +47,6 @@ const navLinks = [
   { label: 'Products', href: '/dashboard/products', icon: icons.products },
   { label: 'Orders', href: '/dashboard/orders', icon: icons.orders },
   { label: 'Customers', href: '/dashboard/customers', icon: icons.customers },
-  { label: 'Analytics', href: '/dashboard/analytics', icon: icons.analytics },
-  { label: 'Marketing', href: '/dashboard/marketing', icon: icons.marketing },
   { label: 'Payments', href: '/dashboard/payments', icon: icons.payments },
   { label: 'Settings', href: '/dashboard/settings', icon: icons.settings },
   { label: 'Roles & Permissions', href: '/dashboard/roles', icon: icons.roles },

@@ -2,19 +2,19 @@
 
 /* --- Base Header Container (Dark Gray Aesthetic) --- */
 .headerContainer {
-    position: fixed;
-    z-index: 999;
-    width: 95%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    display: flex;
+    z-index: 1000;
+    border-bottom: 1px solid var(--dashboard-border-color);
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    width: 116%;
     height: 60px;
-    border-bottom: 1px solid var(--dashboard-border-color);
-    transition: all 0.3s ease;
+    padding: 15px 30px;
+    transition: all .3s;
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
 }
 
 /* --- Theme Variables --- */
@@ -180,4 +180,50 @@
 .switchHandle svg {
   width: 16px;
   height: 16px;
+}
+
+/* ... existing styles ... */
+
+.notificationBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  color: inherit;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.notificationBtn:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.darkTheme .notificationBtn:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.badge {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: #ef4444; /* Red */
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  height: 16px;
+  width: 16px; /* Fixed width for perfect circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid white; /* Border helps it pop */
+}
+
+.darkTheme .badge {
+  border-color: #0f172a; /* Match dark header bg */
 }

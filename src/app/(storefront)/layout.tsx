@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // Optimization: Use Google Fonts
-import "./globals.css";
+import { Inter } from "next/font/google";
 import { CartProvider } from "@/lib/cart-provider";
-import AuthManager from "./ui/components/auth-manager";
-import Header from "./ui/components/shared/header";
-import Footer from "./ui/components/shared/footer";
+import AuthManager from "@/app/ui/components/auth-manager";
+import Header from "@/app/ui/components/shared/header";
+import Footer from "@/app/ui/components/shared/footer";
 
 // Load the Inter font
 const inter = Inter({ subsets: ["latin"] });
@@ -60,7 +59,12 @@ export default function RootLayout({
 
       {/* Apply the Font Class to Body */}
       <body className={inter.className}>
+        <CartProvider>
+          <AuthManager />
+          <Header />
           {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

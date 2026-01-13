@@ -11,7 +11,7 @@ export async function updateOrderStatus(orderId: string, newStatus: string) {
     .from('orders')
     .update({ 
       status: newStatus,
-      updated_at: new Date().toISOString()
+      created_at: new Date().toISOString()
     })
     .eq('id', orderId);
 

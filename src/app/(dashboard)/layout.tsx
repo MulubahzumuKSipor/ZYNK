@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/server";
 import DashHeader from "@/app/ui/components/shared/dash_header";
 import DashSidebar from "@/app/ui/components/shared/sidebar";
+import DashFooter from "@/app/ui/components/shared/dash_footer";
 import { DashboardThemeProvider } from "@/app/ui/components/shared/themeProvider";
 import styles from "@/app/ui/styles/layout.module.css";
 
@@ -54,7 +55,7 @@ export default async function DashboardLayout({
           </main>
 
           {/* Optional Footer */}
-          {/* <footer className={styles.footerWrapper}><DashFooter /></footer> */}
+          <footer className={styles.footerWrapper}><DashFooter /></footer>
         </div>
       </div>
     </DashboardThemeProvider>
