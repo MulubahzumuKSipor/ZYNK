@@ -111,7 +111,7 @@ export default function Footer() {
           {/* Payment Methods */}
           <div className={styles.paymentMethods}>
             <Image width={35} height={20} src="/visa.svg" alt="Visa" />
-            <Image width={35} height={20} src="/mastercard.svg" alt="Mastercard" />
+            <Image width={35} height={20} src="/mastercard.svg" alt="Mastercard" style={{color: 'white'}}/>
             <Image width={35} height={20} src="/mtn.svg" alt="Mobile Money" />
             <Image width={35} height={35} src="/orange.webp" alt="Orange Money" />
           </div>

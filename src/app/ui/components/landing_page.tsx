@@ -66,8 +66,11 @@ export default function LandingHero() {
             height={600}
             className={styles.heroImage}
             priority
+            fetchPriority="high"
+            sizes="(max-width: 768px) 90vw, 600px"
             style={{ objectFit: "cover" }}
           />
+
 
           {/* Optional: Floating decorative card */}
           <div className={styles.floatingCard}>

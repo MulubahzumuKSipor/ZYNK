@@ -12,7 +12,7 @@
   position: sticky;
   top: 0;
   border-right: 1px solid #e2e8f0;
-  background: white;
+  /* background: white; */
   z-index: 40;
 }
 

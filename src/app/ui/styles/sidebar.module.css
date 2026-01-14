@@ -1,6 +1,6 @@
 .sidebar {
   width: 250px;
-  height: 79vh;
+  height: 100vh;
   padding: 2.5rem 0;
   transition: all 0.3s ease;
   position: sticky;
@@ -12,6 +12,21 @@
   flex-direction: column;
   border-right: 1px solid var(--dashboard-border-color);
   z-index: 100;
+}
+
+.back{
+  text-decoration: none;
+  margin-top: 3rem;
+  font-size: 1rem;
+  display: flex;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.hreflink:hover {
+  background-color: black;
+  color: white;
 }
 
 .logoSection {
@@ -29,6 +44,10 @@
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.nav{
+  flex-direction: column;
 }
 
 .navLink {
