@@ -75,25 +75,27 @@ export default function AboutPage() {
 
       {/* Team Section */}
       <section className={styles.team}>
-        <h2>Meet the Team</h2>
+        <h2 className={styles.teamTitle}>Meet the Team</h2>
+        <p className={styles.teamSubtitle}>
+          The people building and leading our vision
+        </p>
+
         <div className={styles.teamGrid}>
           <div className={styles.teamMember}>
-            <Image src="/CEO.jpg" alt="Founder" width={150} height={150} className={styles.teamImage} />
-            <h3>Mulubahzumu Kemmeh Sipor</h3>
-            <p>Founder & CEO</p>
+            <Image
+              src="/profile2.jpeg"
+              alt="Mulubahzumu Kemmeh Sipor – Founder & CEO"
+              width={160}
+              height={160}
+              className={styles.teamImage}
+              priority
+            />
+            <h3 className={styles.memberName}>Mulubahzumu Kemmeh Sipor</h3>
+            <p className={styles.memberRole}>Founder & CEO</p>
           </div>
-          {/* <div className={styles.teamMember}>
-            <Image src="/images/team-member.jpg" alt="Team Member" width={150} height={150} className={styles.teamImage} />
-            <h3></h3>
-            <p>Marketing Lead</p>
-          </div>
-          <div className={styles.teamMember}>
-             <Image src="/images/team-member2.jpg" alt="Team Member" width={150} height={150} className={styles.teamImage} />
-            <h3>Mike Lee</h3>
-            <p>Product Manager</p>
-          </div> */}
         </div>
       </section>
+
 
       {/* How It Works */}
       <section className={styles.howItWorks}>

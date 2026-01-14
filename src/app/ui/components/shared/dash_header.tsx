@@ -69,7 +69,7 @@ export default function DashHeader() {
             <Link href="/dashboard/home" className={styles.logoLink}>
                 <div className={styles.logo}>
                     <Image
-                        src={"/bag-black.PNG"}
+                        src={"/bag-black.png"}
                         alt="ZYNK Sales Logo"
                         width={32}
                         height={32}
